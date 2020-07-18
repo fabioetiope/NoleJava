@@ -1,0 +1,49 @@
+package com.comunenapoli.progetto.utils;
+
+public interface Costanti {
+	
+	public final static Integer ID_RUOLO_ADMIN = 1;
+	public final static Integer ID_RUOLO_STAFF = 2;
+	public final static Integer ID_RUOLO_CLIENTE = 3;
+	
+	public final static String RUOLO_ADMIN = "admin";
+	public final static String RUOLO_STAFF = "staff";
+	public final static String RUOLO_CLIENTE = "cliente";
+	
+	public final static String USER_IN_SESSION = "sessionUser";
+	public final static String AUTO_IN_SESSION = "sessionAuto";
+	
+	public final static String BUSINESS_LOGIC_UTENTE = "businessLogicUtente";
+	public final static String BUSINESS_LOGIC_RUOLO = "businessLogicRuolo";
+	public final static String BUSINESS_LOGIC_AUTO = "businessLogicAuto";
+	public final static String BUSINESS_LOGIC_NOLEGGIO = "businessLogicNoleggio";
+	public final static String BUSINESS_LOGIC_PATENTE = "businessLogicPatente";
+	public final static String BUSINESS_LOGIC_CARTA = "businessLogicCarta";
+
+
+	public final static String CHIAVE_SERVLET = "chiaveServlet";
+	
+	public final static String CHIAVE_UTENTE_DAO = "chiaveUtenteDao";
+
+	public final static Integer REGISTRAZIONE_VALIDA = 1;
+	public final static Integer REGISTRAZIONE_FALLITA_ETA = -1;
+	public final static Integer REGISTRAZIONE_FALLITA_UTENTE_GIA_ESISTENTE = 0;
+
+	public final static Integer ERRORE_GENERICO = -2;
+	
+	public final static String LISTA_COMPLETA_AUTO = "listaCompletaAuto";
+	
+	public final static String DATA_INIZIO_NOLEGGIO = "dataInizioNoleggio";
+	public final static String DATA_FINE_NOLEGGIO = "dataFineNoleggio";
+	
+	public static final String UPDATE_CARTA = "updateCarta";
+	public static final String NUMERO_CARTA = "numeroCarta";
+	public static final String CVV_CARTA = "cvvCarta";
+	
+	public static final String NUMERO_PATENTE = "numeroPatente";
+	public static final String TIPOLOGIA_AUTO_SCELTA = "tipologiaAutoScelta";
+	public static final String LISTA_UTENTI_NON_VERIFICATI = "listaUtentiNonVerificati";
+
+	
+
+}
