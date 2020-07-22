@@ -88,20 +88,40 @@ public class BusinessLogicCarta {
 	}
 	
 	
-	public void operazioniCarta (String dataDiScadenzaString, String numeroCarta, Integer cvv, Utente utente) throws ParseException {
+	public void operazioniCarta (Integer idCarta, String dataDiScadenzaString, String numeroCarta, Integer cvv, Utente utente) throws ParseException {
+		CartaDiCredito cartaDiCredito = cartaDiCreditoDao.findCartaByIdCarta(idCarta);
 		
-		CartaDiCredito cartaDiCredito = cartaDiCreditoDao.findCartaByNumeroCarta(numeroCarta);
 		boolean isNuovaCarta = cartaDiCredito == null;
 		Date dataDiScadenza = DataUtils.convertiDataFromString(dataDiScadenzaString);
-		
 		if (isNuovaCarta) {
 			cartaDiCredito = new CartaDiCredito(numeroCarta, cvv, dataDiScadenza, utente);
 			create(cartaDiCredito);
 		}else {
 			cartaDiCredito.setDataDiScadenza(dataDiScadenza);
+			cartaDiCredito.setCvv(cvv);
+			cartaDiCredito.setNumeroCarta(numeroCarta);
 			update(cartaDiCredito);
 		}
 		
+	}
+
+
+	public Integer responsoCarta(Utente utente) throws Exception {
+		CartaDiCredito carta = getCartaByUtente(utente);
+		boolean isCartaValid = false;
+		if (carta==null) {
+			return -1;
+		}
+		else {
+			Date dataScadenza = carta.getDataDiScadenza();
+			isCartaValid = isCartaValid(dataScadenza);
+			if (isCartaValid) {
+				return 1;
+			}else {
+				return 0;
+			}
+		}
+	
 	}
 	
 		

@@ -43,6 +43,21 @@ public interface Costanti {
 	public static final String NUMERO_PATENTE = "numeroPatente";
 	public static final String TIPOLOGIA_AUTO_SCELTA = "tipologiaAutoScelta";
 	public static final String LISTA_UTENTI_NON_VERIFICATI = "listaUtentiNonVerificati";
+	public static final String LISTA_UTENTI = "listaUtenti";
+	
+	public static final String MARCA_AUTO_SCELTA = "marcaAuto";
+	public static final String MODELLO_AUTO_SCELTA = "modelloAuto";
+	
+	public static final String UTENTE_PROMOSSO = "utentePromosso";
+	public static final String UTENTE_VERIFICATO = "utenteVerificato";
+	public static final String UTENTE_RIMOSSO = "utenteRimosso";
+	public static final String PROFILO_CLIENTE = "profiloCliente";
+	public static final String CARTA_IN_SESSION = "cartaInSession";
+	public static final String NOLEGGI_UTENTE = "noleggiUtente";
+	public static final String CANCELLAZIONE_AVVENUTA = "canellazioneAvvenuta";
+	
+	public static final String LISTA_COMPLETA_NOLEGGI = "listaCompletaNoleggi";
+	public static final String LISTA_COMPLETA_CHIUSURE = "listaCompletaChiusure";
 
 	
 

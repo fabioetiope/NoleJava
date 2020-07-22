@@ -79,17 +79,17 @@ public class CartaDiCredito {
 		this.utente = utente;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((cvv == null) ? 0 : cvv.hashCode());
-		result = prime * result + ((dataDiScadenza == null) ? 0 : dataDiScadenza.hashCode());
-		result = prime * result + ((idCartaDiCredito == null) ? 0 : idCartaDiCredito.hashCode());
-		result = prime * result + ((numeroCarta == null) ? 0 : numeroCarta.hashCode());
-		result = prime * result + ((utente == null) ? 0 : utente.hashCode());
-		return result;
-	}
+//	@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + ((cvv == null) ? 0 : cvv.hashCode());
+//		result = prime * result + ((dataDiScadenza == null) ? 0 : dataDiScadenza.hashCode());
+//		result = prime * result + ((idCartaDiCredito == null) ? 0 : idCartaDiCredito.hashCode());
+//		result = prime * result + ((numeroCarta == null) ? 0 : numeroCarta.hashCode());
+//		result = prime * result + ((utente == null) ? 0 : utente.hashCode());
+//		return result;
+//	}
 
 	@Override
 	public boolean equals(Object obj) {

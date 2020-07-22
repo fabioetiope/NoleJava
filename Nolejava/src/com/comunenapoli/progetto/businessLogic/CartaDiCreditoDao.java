@@ -62,4 +62,10 @@ public class CartaDiCreditoDao implements DaoInterface<CartaDiCredito> {
 				setParameter("x",numeroCarta).getResultList().stream().findFirst().orElse(null);
 		return carta;
 	}
+	
+	public CartaDiCredito findCartaByIdCarta(Integer idCarta) {
+		CartaDiCredito carta = manager.createQuery("select c from CartaDiCredito c where c.idCartaDiCredito = :x",CartaDiCredito.class).
+				setParameter("x",idCarta).getResultList().stream().findFirst().orElse(null);
+		return carta;
+	}
 }

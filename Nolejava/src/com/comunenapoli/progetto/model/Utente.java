@@ -233,13 +233,13 @@ public class Utente {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Utente [idUtente=" + idUtente + ", username=" + username + ", password=" + password + ", nome=" + nome
-				+ ", cognome=" + cognome + ", dataNascita=" + dataNascita + ", isVerificato=" + isVerificato
-				+ ", ruoloUtente=" + ruoloUtente + ", noleggi=" + noleggi + ", patente=" + patente + ", cartaDiCredito="
-				+ cartaDiCredito + "]";
-	}
+//	@Override
+//	public String toString() {
+//		return "Utente [idUtente=" + idUtente + ", username=" + username + ", password=" + password + ", nome=" + nome
+//				+ ", cognome=" + cognome + ", dataNascita=" + dataNascita + ", isVerificato=" + isVerificato
+//				+ ", ruoloUtente=" + ruoloUtente + ", noleggi=" + noleggi + ", patente=" + patente + ", cartaDiCredito="
+//				+ cartaDiCredito + "]";
+//	}
 	
 	@PrePersist
     public void prePersist() {

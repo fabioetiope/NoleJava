@@ -92,4 +92,5 @@ public class NoleggioDao implements DaoInterface<Noleggio> {
 	
 	
 	
+	
 }

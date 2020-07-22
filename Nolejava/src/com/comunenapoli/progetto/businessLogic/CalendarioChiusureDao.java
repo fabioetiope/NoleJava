@@ -54,12 +54,15 @@ public class CalendarioChiusureDao implements DaoInterface<CalendarioChiusure> {
 		manager.remove(calendarioChiusure);
 	}
 	
+	
 	public CalendarioChiusure findByDataInizioDataFine(Date dataInizio, Date dataFine) {
-		return manager.createQuery("select c from CalendarioChiusure c where c.dataInizioChiusura = :x and c.dataFineChiusura = :y ",CalendarioChiusure.class).
+		return manager.createQuery("select c from CalendarioChiusure c where c.dataInizioChiusura between :x and :y ",CalendarioChiusure.class).
 				setParameter("x",dataInizio).setParameter("y", dataFine).getResultList().stream().findFirst().orElse(null);
 		
 		
 	}
+	
+	
 	
 	public boolean findByDataInizioUtente(Date dataInizioUtente) {
 		CalendarioChiusure calendarioChiusure = manager.createQuery("select c from CalendarioChiusure c where c.dataInizioChiusura < :x or c.dataFineChiusura > :x ",CalendarioChiusure.class).

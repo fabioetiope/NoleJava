@@ -1,7 +1,7 @@
 package com.comunenapoli.progetto.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.time.LocalDateTime;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,82 +12,100 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.comunenapoli.progetto.businessLogic.BusinessLogicCarta;
 import com.comunenapoli.progetto.businessLogic.BusinessLogicPatente;
-import com.comunenapoli.progetto.businessLogic.BusinessLogicUtente;
 import com.comunenapoli.progetto.model.CartaDiCredito;
 import com.comunenapoli.progetto.model.Patente;
 import com.comunenapoli.progetto.model.Utente;
 import com.comunenapoli.progetto.utils.Costanti;
 
-/**
- * Servlet implementation class NoleggioServlet
- */
+
 @WebServlet("/NoleggioServlet")
 public class NoleggioServlet extends HttpServlet {
-	
 
 	private static final long serialVersionUID = 1L;
-	
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	{
-		doPost(req,resp);
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		response.setHeader("Last-modified", LocalDateTime.now().toString());
+		response.setHeader("Cache-control", "no-store");
+		doPost(request, response);
 	}
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-		Utente utente = (Utente) req.getSession().getAttribute(Costanti.USER_IN_SESSION);
-		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		response.setHeader("Last-modified", LocalDateTime.now().toString());
+		response.setHeader("Cache-control", "no-store");
+		Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
+		System.out.println(utente.toString());
+
 		BusinessLogicPatente businessLogicPatente = (BusinessLogicPatente) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_PATENTE);
 		BusinessLogicCarta businessLogicCarta = (BusinessLogicCarta) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_CARTA);
-		
-		Patente patente = businessLogicPatente.getPatenteByUtente(utente);
-		CartaDiCredito cartaDiCredito = businessLogicCarta.getCartaByUtente(utente);
-		
-		String numeroPatente = "";
-		
-		
-		if (patente == null) {
-			req.setAttribute(Costanti.NUMERO_PATENTE, numeroPatente);
-			req.getRequestDispatcher("/jsp/patente.jsp").forward(req, resp);
-			
-//			PrintWriter printWriter = resp.getWriter();
-//			printWriter.println("<h1> Patente inesistente </h1>");
-//			printWriter.flush();
-//			printWriter.close();
-		}else {
-			try {
-				if (businessLogicPatente.isPatenteValid(patente.getDataScadenza()) == true) {
-					System.out.println("sono nell if");
-					String numeroCarta = "";
-					String cvv = "";
-					String html = "";
-					if (cartaDiCredito == null){
-						System.out.println("sono qui");
-						html = "/jsp/carta.jsp";
-					}else {
-						
-						if (businessLogicCarta.isCartaValid(cartaDiCredito.getDataDiScadenza()) == true) {
-						  req.getRequestDispatcher("/jsp/concludiNoleggio.jsp").forward(req, resp);
-						}else {
-							html = "/jsp/carta.jsp";
-							numeroCarta= cartaDiCredito.getNumeroCarta();
-							cvv = cartaDiCredito.getCvv().toString();
-						}
-					}
-					req.setAttribute(Costanti.NUMERO_CARTA, numeroCarta);
-					req.setAttribute(Costanti.CVV_CARTA, cvv);
-					req.getRequestDispatcher(html).forward(req, resp);
-				}else {
-					numeroPatente = patente.getNumeroPatente();
-					req.setAttribute(Costanti.NUMERO_PATENTE, numeroPatente);
-					req.getRequestDispatcher("/jsp/patente.jsp").forward(req, resp);
+		try {
+			Integer responsoPatente = businessLogicPatente.responsoPatente(utente);
+			Integer responsoCarta = businessLogicCarta.responsoCarta(utente);
+			String html = "";
+			String numeroCarta = "";
+			String numeroPatente = "";
+			String cvv = "";
+			if (responsoPatente == 1) {
+				//TODO patente valida, vai form carta
+				if (responsoCarta == 1) {
+					//TODO manda al form finale di noleggio
+					html = "/jsp/concludiNoleggio.jsp";
+					RequestDispatcher requestDispatcher; 
+					requestDispatcher = request.getRequestDispatcher(html);
+					requestDispatcher.forward(request, response);
+
 				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				else if (responsoCarta == 0) { //carta c'è e non è valida
+					CartaDiCredito carta = businessLogicCarta.getCartaByUtente(utente);
+						numeroCarta = carta.getNumeroCarta();
+						cvv = carta.getCvv().toString();
+					html = "/jsp/carta.jsp";
+//					request.setAttribute(Costanti.NUMERO_CARTA,numeroCarta);
+//					request.setAttribute(Costanti.CVV_CARTA,cvv);
+					request.setAttribute(Costanti.CARTA_IN_SESSION, carta);
+
+					RequestDispatcher requestDispatcher; 
+					requestDispatcher = request.getRequestDispatcher(html);
+					requestDispatcher.forward(request, response);
+				}
+				else if (responsoCarta == -1) {
+					//TODO carta mai inserita, vai al form di inserimento dati carta
+					html = "/jsp/carta.jsp";
+					CartaDiCredito carta = businessLogicCarta.getCartaByUtente(utente);
+					request.setAttribute(Costanti.CARTA_IN_SESSION, carta);
+//					request.setAttribute(Costanti.NUMERO_CARTA,numeroCarta);
+//					request.setAttribute(Costanti.CVV_CARTA,cvv);
+					RequestDispatcher requestDispatcher; 
+					requestDispatcher = request.getRequestDispatcher(html);
+					requestDispatcher.forward(request, response);
+
+				}
 			}
+			else if (responsoPatente == 0) {
+				Patente patente = businessLogicPatente.getPatenteByUtente(utente);
+				numeroPatente = patente.getNumeroPatente();
+				request.setAttribute(Costanti.NUMERO_PATENTE,numeroPatente);
+				html = "/jsp/patente.jsp";
+				RequestDispatcher requestDispatcher; 
+				requestDispatcher = request.getRequestDispatcher(html);
+				requestDispatcher.forward(request, response);
+
+			}
+			else if (responsoPatente == -1) {
+				//TODO patente mai inserita, vai al form di inserimento dati patente
+				request.setAttribute(Costanti.NUMERO_PATENTE,numeroPatente);
+				html = "/jsp/patente.jsp";
+				RequestDispatcher requestDispatcher; 
+				requestDispatcher = request.getRequestDispatcher(html);
+				requestDispatcher.forward(request, response);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+	
 	}
 
 }

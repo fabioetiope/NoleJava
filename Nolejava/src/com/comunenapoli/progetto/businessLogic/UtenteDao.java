@@ -63,7 +63,7 @@ public class UtenteDao implements DaoInterface<Utente> {
 	
 	public Integer findRuoloByIdUtente(Integer idUtente) {
 		Utente utente = manager.createQuery("select u from Utente u where u.idUtente = :x ",Utente.class).
-				setParameter("x",idUtente).getResultList().stream().findFirst().orElse(null);;
+				setParameter("x",idUtente).getResultList().stream().findFirst().orElse(null);
 		return utente.getRuoloUtente().getIdRuolo();
 	}
 	
@@ -77,18 +77,24 @@ public class UtenteDao implements DaoInterface<Utente> {
 	
 	public boolean checkVerificaById(Integer idUtente) {
 		Utente utente = manager.createQuery("select u from Utente u where u.idUtente = :x ",Utente.class).
-				setParameter("x",idUtente).getResultList().stream().findFirst().orElse(null);;
+				setParameter("x",idUtente).getResultList().stream().findFirst().orElse(null);
 		return utente.getIsVerificato();
 	}
 
 	public Utente findUtentebyId(Integer id) {
 		Utente utente = manager.createQuery("select u from Utente u where u.idUtente = :x ",Utente.class).
-				setParameter("x",id).getResultList().stream().findFirst().orElse(null);;
+				setParameter("x",id).getResultList().stream().findFirst().orElse(null);
 		return utente;
 	}
 	
 	public List<Utente> findByIsVerificato(){
 		return manager.createQuery("select u from Utente u where u.isVerificato = 0",Utente.class).getResultList();
+	}
+	
+	
+	public Utente findUtenteByUsername(String username) {
+		return manager.createQuery("select u from Utente u where u.username = :x ",Utente.class).
+				setParameter("x",username).getResultList().stream().findFirst().orElse(null);
 	}
 	
 	

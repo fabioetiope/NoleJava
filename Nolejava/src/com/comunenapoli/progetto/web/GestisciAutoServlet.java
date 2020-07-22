@@ -19,10 +19,12 @@ import com.comunenapoli.progetto.utils.BusinessLogicAutoNoleggioUtils;
 import com.comunenapoli.progetto.utils.Costanti;
 import com.comunenapoli.progetto.utils.DataUtils;
 
-
-@WebServlet("/HomepageServlet")
-public class HomepageServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+/**
+ * Servlet implementation class GestisciAutoServlet
+ */
+@WebServlet("/GestisciAutoServlet")
+public class GestisciAutoServlet extends HttpServlet {
+private static final long serialVersionUID = 1L;
 	
 	
 	@Override
@@ -41,13 +43,15 @@ public class HomepageServlet extends HttpServlet {
 		BusinessLogicNoleggio businessLogicNoleggio = (BusinessLogicNoleggio) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_NOLEGGIO);
 		BusinessLogicAuto businessLogicAuto = (BusinessLogicAuto) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_AUTO);
 
-		String hidden = req.getParameter("formCompilato");
+		String action = req.getParameter("action").toLowerCase();
 		
-		if (hidden == null || hidden.isEmpty() || hidden == "" || hidden.equals("")) {
+		
+		
+		if (action == null || action.isEmpty() || action == "" || action.equals("")) {
 			listaCompletaAuto = businessLogicAuto.getListaCompletaAuto();
 			req.getSession().setAttribute(Costanti.LISTA_COMPLETA_AUTO, listaCompletaAuto);
 			req.getRequestDispatcher("/jsp/homepage.jsp").forward(req, resp);
-		}else {
+		}else if (action.contains("ricerca")){
 			try {
 			String stringDataInizioNoleggio = req.getParameter("dataInizio");
 			String stringaDataFineNoleggio = req.getParameter("dataFine");
@@ -85,20 +89,38 @@ public class HomepageServlet extends HttpServlet {
 			
 			req.getSession().setAttribute(Costanti.TIPOLOGIA_AUTO_SCELTA, tipologiaAuto);
 			//List <Auto> risultati = BusinessLogicAutoNoleggioUtils.filtroRicerca(dataInizioNoleggio, dataFineNoleggio, tipologiaAuto, businessLogicAuto, businessLogicNoleggio);
-			List<Auto> risultati = BusinessLogicAutoNoleggioUtils.filtroRicerca(dataInizioNoleggio, dataFineNoleggio, tipologiaAuto, businessLogicAuto, businessLogicNoleggio);
+			List<Auto> risultati = BusinessLogicAutoNoleggioUtils.filtroRicerca(dataInizioNoleggio, dataFineNoleggio, marcaAuto, modelloAuto, tipologiaAuto, businessLogicAuto, businessLogicNoleggio);
 
 			
 			req.getSession().setAttribute(Costanti.LISTA_COMPLETA_AUTO, risultati);
 			//TODO ricarica pagina
-			req.getRequestDispatcher("/jsp/homepage.jsp").forward(req, resp);
+			req.getRequestDispatcher("/jsp/gestisciAuto.jsp").forward(req, resp);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else if (action.contains("modifica")) {
+			String stringIdAuto = req.getParameter("idAuto");
+			Integer idAuto = Integer.valueOf(stringIdAuto);
+			
+			Auto auto = businessLogicAuto.getAutobyIdAuto(idAuto);
+			req.getSession().setAttribute(Costanti.AUTO_IN_SESSION, auto);
+			
+			req.getRequestDispatcher("/jsp/modificaauto.jsp").forward(req, resp);
 
 
-
+		}else if (action.contains("cancella")) {
+			String stringIdAuto = req.getParameter("idAuto");
+			Integer idAuto = Integer.valueOf(stringIdAuto);
+			
+			businessLogicAuto.deleteAuto(idAuto);
+			
+			listaCompletaAuto = businessLogicAuto.getListaCompletaAuto();
+			req.getSession().setAttribute(Costanti.LISTA_COMPLETA_AUTO, listaCompletaAuto);
+			req.getRequestDispatcher("/jsp/gestisciAuto.jsp").forward(req, resp);
+			
 		}
 		
 	}
 }
+

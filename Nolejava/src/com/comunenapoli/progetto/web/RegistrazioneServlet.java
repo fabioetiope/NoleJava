@@ -69,7 +69,7 @@ public class RegistrazioneServlet extends HttpServlet {
 		Integer checkRegistrazione = Costanti.ERRORE_GENERICO;
 		try {
 			Date dataNascita = DataUtils.convertiDataFromString(dataNascitaString);
-			if (checkCondizioni && DataUtils.dataDiNascita(dataNascita)) {
+			if (checkCondizioni && DataUtils.dataNascita(dataNascita)) {
 				Ruolo ruoloUtente = new Ruolo();
 				if (isStaff) {
 					ruoloUtente.setIdRuolo(Costanti.ID_RUOLO_STAFF);

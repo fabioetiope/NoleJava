@@ -38,6 +38,7 @@ public class AutoDao implements DaoInterface<Auto> {
 
 	@Override
 	public List<Auto> retrieve() {
+		System.out.println("metodo retrive");
 		List<Auto> listaAuto = manager.createQuery("from Auto",Auto.class).getResultList();
 		return listaAuto;
 	}

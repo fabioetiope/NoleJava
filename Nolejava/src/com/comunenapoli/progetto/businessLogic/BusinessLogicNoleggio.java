@@ -16,16 +16,18 @@ public class BusinessLogicNoleggio {
 	
 	private NoleggioDao noleggioDao = null;
 	private CalendarioChiusureDao calendarioChiusureDao = null;
+	private AutoDao autoDao = null;
 	private EntityManager entityManager = null;
 	
 	
-	public BusinessLogicNoleggio(NoleggioDao noleggioDao, CalendarioChiusureDao calendarioChiusureDao, EntityManager entityManager) {
+	public BusinessLogicNoleggio(NoleggioDao noleggioDao, CalendarioChiusureDao calendarioChiusureDao, AutoDao autoDao, EntityManager entityManager) {
 		this.noleggioDao = noleggioDao;
 		this.calendarioChiusureDao = calendarioChiusureDao;
+		this.autoDao = autoDao;
 		this.entityManager = entityManager;
 	}
 
-
+	
 	public NoleggioDao getNoleggioDao() {
 		return noleggioDao;
 	}
@@ -43,6 +45,17 @@ public class BusinessLogicNoleggio {
 
 	public void setCalendarioChiusure(CalendarioChiusureDao calendarioChiusure) {
 		this.calendarioChiusureDao = calendarioChiusure;
+	}
+	
+
+
+	public AutoDao getAutoDao() {
+		return autoDao;
+	}
+
+
+	public void setAutoDao(AutoDao autoDao) {
+		this.autoDao = autoDao;
 	}
 
 
@@ -234,19 +247,70 @@ public class BusinessLogicNoleggio {
 		
 		return checkEliminato;
 	}
+//		
+//	public List<Integer> getIdAutoNonDisponibili (Date dataInizioNoleggio, Date dataFineNoleggio){
+//		List<Noleggio> noleggi = noleggioDao.findNoleggiByDataInizioDataFine(dataInizioNoleggio, dataFineNoleggio);
+//		List<Integer> idAutoNonDisponibili = new ArrayList<Integer>();
+//		
+//		for (Noleggio noleggio : noleggi) {
+//			idAutoNonDisponibili.add(noleggio.getAuto().getIdAuto());
+//		}
+//		
+//		return idAutoNonDisponibili;
+//
+//	}
+	
+	public List<Integer> getIdAutoNonDisponibili (Date dataInizioNoleggio, Date dataFineNoleggio){
 		
-	public List<Integer> getAutoNonDisponibili (Date dataInizioNoleggio, Date dataFineNoleggio){
+		
 		List<Noleggio> noleggi = noleggioDao.findNoleggiByDataInizioDataFine(dataInizioNoleggio, dataFineNoleggio);
+		List <Auto> listaAutoCompleta = autoDao.retrieve();
 		List<Integer> idAutoNonDisponibili = new ArrayList<Integer>();
 		
-		for (Noleggio noleggio : noleggi) {
-			idAutoNonDisponibili.add(noleggio.getAuto().getIdAuto());
+		CalendarioChiusure calendarioChiusure = calendarioChiusureDao.findByDataInizioDataFine(dataInizioNoleggio, dataFineNoleggio);
+		
+		if (calendarioChiusure != null ) {
+			for (Auto auto : listaAutoCompleta) {
+				idAutoNonDisponibili.add(auto.getIdAuto());
+			}
+		} else if (noleggi != null){
+			for (Noleggio noleggio : noleggi) {
+				idAutoNonDisponibili.add(noleggio.getAuto().getIdAuto());
+			}	
+			
 		}
+		
 		
 		return idAutoNonDisponibili;
 
 	}
 	
+	public List<Noleggio> getNoleggiByUtente (Utente utente){
+		return noleggioDao.findNoleggiByUtente(utente);
+	}
 	
+	public List<Noleggio> getListaCompletaNoleggi (){
+		return noleggioDao.retrieve();
+	}
+	
+	
+	public List<Noleggio> getNoleggiByListaAuto (List <Auto> listaAuto){
+		List <Noleggio> risultati = new ArrayList<Noleggio>();
+		
+		for (Auto auto : listaAuto) {
+			risultati.addAll(noleggioDao.findNoleggiByAuto(auto));
+		}
+		
+		return risultati;	
+	}
+	
+	public List<Noleggio> getNoleggiByDataIniziDataFine (Date dataInizio, Date dataFine){
+		return noleggioDao.findNoleggiByDataInizioDataFine(dataInizio, dataFine);
+	}
+	
+	public List<CalendarioChiusure> getChiusure (){
+		return calendarioChiusureDao.retrieve();
+	}
+	 
 	
 }

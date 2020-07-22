@@ -7,10 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-
-	<form action="/Nolejava/LogoutServlet" method="post">
-       	<input type="submit" value="Logout">
-	 </form>
-
+	<center>
+        <h3><%=request.getAttribute("Message")%></h3>
+    </center>
 </body>
 </html>

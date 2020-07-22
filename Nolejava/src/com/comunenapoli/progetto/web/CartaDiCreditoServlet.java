@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,10 +16,11 @@ import com.comunenapoli.progetto.model.Utente;
 import com.comunenapoli.progetto.utils.Costanti;
 
 
+
 @WebServlet("/CartaDiCreditoServlet")
 public class CartaDiCreditoServlet extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
-    
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
@@ -29,40 +29,49 @@ public class CartaDiCreditoServlet extends HttpServlet {
 		doPost(request, response);
 	}
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
 		response.setHeader("Last-modified", LocalDateTime.now().toString());
 		response.setHeader("Cache-control", "no-store");
-		
-		BusinessLogicCarta businessLogicCarta = (BusinessLogicCarta) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_CARTA);
 		Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
+		BusinessLogicCarta businessLogicCarta = (BusinessLogicCarta) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_CARTA);
+		String dataDiScadenza = request.getParameter("datascadenza");
+		String numeroCarta = request.getParameter("numerocarta");
+		String cvvString = request.getParameter("cvv");
+		String idCartaString = request.getParameter("idCarta");
 		
-		String dataDiScadenza = request.getParameter("dataDiScadenza");
-		String numeroCarta = request.getParameter("numeroCarta");
-		String stringCVV = request.getParameter("CVV");
-		
-		Integer cvv;
-		
-		if(stringCVV == null || stringCVV.isEmpty()) {
-			cvv = 0;
-		}else {
-			cvv= Integer.valueOf(stringCVV);
+		Integer cvv = 0;
+		Integer idCarta = 0;
+		if (cvvString!=null && !cvvString.isEmpty()) {
+			cvv = Integer.parseInt(cvvString);
+		}
+		if (idCartaString!=null && !idCartaString.isEmpty()) {
+			idCarta = Integer.parseInt(idCartaString);
 		}
 		
-		
 		try {
-			businessLogicCarta.operazioniCarta(dataDiScadenza, numeroCarta, cvv, utente);
-			request.getRequestDispatcher("/NoleggioServlet").forward(request, response);
-			
-//			ServletContext context = getServletContext();
-//			RequestDispatcher requestVar = context.getNamedDispatcher("NoleggioServlet");
-			
-			//response.sendRedirect("/NoleggioServlet");
+			businessLogicCarta.operazioniCarta(idCarta, dataDiScadenza, numeroCarta, cvv, utente);
+			System.out.println("eseguito operazioni carta");
+			String html = "";
+			Boolean isProfiloCliente = (Boolean)request.getSession().getAttribute(Costanti.PROFILO_CLIENTE);
+			System.out.println("isProfiloCliente: " + isProfiloCliente);
+			if (isProfiloCliente!=null && isProfiloCliente) {
+				request.getSession().removeAttribute(Costanti.PROFILO_CLIENTE);
+				html = "/jsp/profiloClienti.jsp";
+			}
+			else {
+				request.getSession().removeAttribute(Costanti.PROFILO_CLIENTE);
+				html = "/NoleggioServlet";
+			}
+			RequestDispatcher requestDispatcher; 
+			requestDispatcher = request.getRequestDispatcher(html);
+			requestDispatcher.forward(request, response);
+			 //TODO vai a noleggioServlet e procedi con l'ultima parte di noleggio
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
+
 }
+

@@ -152,18 +152,18 @@ public class BusinessLogicUtente {
 		return counter;
 	}
 	
-	public boolean updateRuolo(Utente utente, Integer ruoloId) {
-		int ruoloStaff = Costanti.ID_RUOLO_STAFF;
-		int ruoloCliente = Costanti.ID_RUOLO_CLIENTE;
-		
-		if (ruoloId == ruoloStaff) {
+	public boolean updateRuolo(Utente utente, Integer idRuolo) {
+		Integer idRuoloStaff = Costanti.ID_RUOLO_STAFF;
+		String ruoloStaff = Costanti.RUOLO_STAFF;
+		boolean checkPromozione = idRuolo == idRuoloStaff;
+		if (checkPromozione) {
 			Ruolo ruolo = new Ruolo();
-			ruolo.setIdRuolo(ruoloId);
+			ruolo.setIdRuolo(idRuolo);
+			ruolo.setNomeRuolo(ruoloStaff);
 			utente.setRuoloUtente(ruolo);
 			update(utente);
 			return true;
-		}	
-			
+		}
 		return false;
 	}
 	
@@ -186,11 +186,11 @@ public class BusinessLogicUtente {
 	
 
 	
-	public Integer registrazione (Utente utente) throws ParseException {
-		if (DataUtils.dataDiNascita(utente.getDataNascita()) && !utenteDao.checkUsername(utente.getUsername())) {
+	public Integer registrazione (Utente utente) throws Exception {
+		if (DataUtils.dataNascita(utente.getDataNascita()) && !utenteDao.checkUsername(utente.getUsername())) {
 			create(utente);
 			return Costanti.REGISTRAZIONE_VALIDA;
-		} else if (! DataUtils.dataDiNascita(utente.getDataNascita())){
+		} else if (! DataUtils.dataNascita(utente.getDataNascita())){
 			return Costanti.REGISTRAZIONE_FALLITA_ETA;
 		} else {
 			return Costanti.REGISTRAZIONE_FALLITA_UTENTE_GIA_ESISTENTE;
@@ -218,7 +218,15 @@ public class BusinessLogicUtente {
 		return utenteDao.findUtentebyId(idUtente);
 	}
 	
+	public List<Utente> getListaUtenti(){
+		List<Utente> utenti = utenteDao.retrieve();
+		return utenti;
+	}
 	
+	
+	public Utente getUtenteByUsername(String username) {
+		return utenteDao.findUtenteByUsername(username);
+	}
 	
 	
 	

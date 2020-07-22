@@ -103,6 +103,25 @@ public class BusinessLogicPatente {
 		
 		
 	}
+
+
+	public Integer responsoPatente(Utente utente) throws Exception {
+		Patente patente = patenteDao.findPatenteByUtente(utente);
+		boolean isPatenteValida = false;
+		if (patente==null) {
+			return -1;
+		}
+		else {
+			Date dataScadenza = patente.getDataScadenza();
+			isPatenteValida = isPatenteValid(dataScadenza);
+			if (isPatenteValida) {
+				return 1;
+			}else {
+				return 0;
+			}
+			
+		}
+	}
 	
 
 }

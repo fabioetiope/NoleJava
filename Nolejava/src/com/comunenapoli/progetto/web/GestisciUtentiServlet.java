@@ -34,6 +34,10 @@ public class GestisciUtentiServlet extends HttpServlet {
 		
 		String idUtente = request.getParameter("idUtente");
 		
+		
+        String recipient = request.getParameter("recipient");
+
+		
 		String eliminaUtente = "";
 		String promuoviUtente = "";
 		String verificaUtente = "";
@@ -71,13 +75,22 @@ public class GestisciUtentiServlet extends HttpServlet {
 		if (isPromosso) {
 			//TODO utente promosso
 			System.out.println("utente promosso");
+			request.setAttribute(Costanti.UTENTE_PROMOSSO, isPromosso);
+			request.getRequestDispatcher("/EmailSendingServlet").include(request, response);
+
+			
 		}
 		else if (isRimosso){
 			//TODO utente rimosso
 			System.out.println("utente rimosso");
+			request.setAttribute(Costanti.UTENTE_RIMOSSO, isRimosso);
+			request.getRequestDispatcher("/EmailSendingServlet").include(request, response);
+
 		}
 		else if (isVerificato) {
 			System.out.println("utente verificato");
+			request.setAttribute(Costanti.UTENTE_VERIFICATO, isVerificato);
+			request.getRequestDispatcher("/EmailSendingServlet").include(request, response);
 		}
 		else {
 			//TODO operazione non avvenuta

@@ -45,7 +45,10 @@ public class InitServlet extends HttpServlet {
 	    
 	    NoleggioDao noleggioDao = new NoleggioDao(entityManager);
 	    CalendarioChiusureDao calendarioChiusureDao = new CalendarioChiusureDao (entityManager);
-	    BusinessLogicNoleggio businessLogicNoleggio = new BusinessLogicNoleggio (noleggioDao, calendarioChiusureDao, entityManager);
+	    BusinessLogicNoleggio businessLogicNoleggio = new BusinessLogicNoleggio (noleggioDao, calendarioChiusureDao, autoDao, entityManager);
+	    
+	    
+	 
 	    
 	    
 		getServletContext().setAttribute(Costanti.CHIAVE_SERVLET, entityManager);		

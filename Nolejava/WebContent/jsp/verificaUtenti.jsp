@@ -1,75 +1,67 @@
+<%@page import="com.comunenapoli.progetto.utils.Costanti"%>
 <%@page import="com.comunenapoli.progetto.model.Utente"%>
 <%@page import="java.util.List"%>
-<%@page import="com.comunenapoli.progetto.utils.Costanti"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Verifica utenti</title>
 </head>
 <body>
-	
-	
-	
+
+
+<h1> Verifica utenti</h1>
+
 <%
-	List <Utente> utentiNonVerificati = (List <Utente>) request.getAttribute(Costanti.LISTA_UTENTI_NON_VERIFICATI);
 	Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
 	Integer ruoloUtente = utente.getRuoloUtente().getIdRuolo();
+	List<Utente> utentiNonVerificati = (List<Utente>) request.getAttribute(Costanti.LISTA_UTENTI_NON_VERIFICATI);
+	if (utentiNonVerificati!=null && !utentiNonVerificati.isEmpty()){
+		if (ruoloUtente==Costanti.ID_RUOLO_ADMIN){	
 %>
-	<h1>Gestisci utente</h1>
-	<table>
-		<tr>
-			<th>
-			Id
-			</th>
-			<th>
-			email
-			</th>
-			<th>
-			Tipologia
-			</th>
-			<th>
-			Azione
-			</th>
-		</tr>
-
-		<tr>
-<% 	if (utentiNonVerificati != null && !utentiNonVerificati.isEmpty()){
-		for (Utente user : utentiNonVerificati){
+		
+		<table>
+			<tr>
+				<th>id</th>
+				<th>email</th>
+				<th>tipologia</th>	
+				<th>operazione</th>		
+					
+			</tr>
+			
+			
+<% 		
+		for (int i=0; i<utentiNonVerificati.size();i++){
+			
+			Utente utenteCorrente = utentiNonVerificati.get(i);
+			Integer idUtente = utenteCorrente.getIdUtente();
+			String email = utenteCorrente.getUsername();
+			String tipologia = utenteCorrente.getRuoloUtente().getNomeRuolo();
+%>	
+				<tr>
+				<td><%=idUtente%></td>	
+				<td><%=email%></td>		
+				<td><%=tipologia%></td>	
+				<td>
+				<form action="/Nolejava/GestisciUtentiServlet" method="POST">
+					<input type="hidden" name="idUtente" value="<%=idUtente%>">
+					<input type="hidden" value= "<%=email%>" name="recipient"/> 	 		     	
+			     	<input type="submit" name="action" value="Verifica utente">
+<% 
+				}
+%>				
+				</form>
+				</td>	
+				</tr>	
+<% 			
+		}
 %>
-		<td>
-		<%=user.getIdUtente()%>
-		</td>
-		<td>
-		<%=user.getUsername()%>
-		</td>
-		<td>
-		<%=user.getRuoloUtente().getNomeRuolo()%>
-		</td>
-		<td>
-			<form action="/Nolejava/GestisciUtentiServlet" method="post">
-				<input type="hidden" value= "<%=user.getIdUtente()%>" name="idUtente">
-				<input type="submit" name="action" value="Promuovi utente">
-       			
-       			<%if (ruoloUtente == Costanti.ID_RUOLO_ADMIN ) { %>
-       			<input type="submit" name="action" value="Verifica utente">
-       			<input type="submit" name="action" value="Elimina utente">
-       			<%} %>
-	 		</form>
-		</td>
-	
-
-	
-	
+		
+		</table>
 <%
 	}
-%>	
-	</tr>
-	</table>
-<%
-}
 %>
 
 
