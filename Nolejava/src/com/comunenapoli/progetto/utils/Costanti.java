@@ -58,6 +58,12 @@ public interface Costanti {
 	
 	public static final String LISTA_COMPLETA_NOLEGGI = "listaCompletaNoleggi";
 	public static final String LISTA_COMPLETA_CHIUSURE = "listaCompletaChiusure";
+	
+
+	
+	public static final String CAMBIO_AUTO_SCELTA = "cambioAutoScelta";
+	public static final String CARBURANTE_AUTO_SCELTA = "carburanteAutoScelta";
+	public static final String NUMERO_POSTI_AUTO_SCELTA = "numeroPostiAutoScelta";
 
 	
 

@@ -66,11 +66,11 @@
 
 	<form action="/Nolejava/HomepageServlet" method="post">
 		<input type="hidden" name="formCompilato" value="1"> 
-		<input type="date" placeholder="Data inizio noleggio" name="dataInizio" value="<%=dataInizioNoleggio%>" required>
+		<input type="date" class="form-control" placeholder="Data inizio noleggio" name="dataInizio" value="<%=dataInizioNoleggio%>" required>
 		<br>
-		<input type="date" placeholder="Data fine noleggio" name="dataFine" value="<%=dataFineNoleggio%>" required>
+		<input type="date" class="form-control" placeholder="Data fine noleggio" name="dataFine" value="<%=dataFineNoleggio%>" required>
 		<br>
-		<datalist id="tipologiaAuto" name="tipologiaAuto">
+		<datalist id="tipologiaAuto" class="form-control" name="tipologiaAuto">
 			<option value="Berlina"></option>
 			<option value="Utilitaria"></option>
 			<option value="Suv"></option>

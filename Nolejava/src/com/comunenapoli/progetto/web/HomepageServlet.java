@@ -51,25 +51,26 @@ public class HomepageServlet extends HttpServlet {
 			try {
 			String stringDataInizioNoleggio = req.getParameter("dataInizio");
 			String stringaDataFineNoleggio = req.getParameter("dataFine");
-			//String stringNumeroPostiAuto = req.getParameter("stringNumeroPostiAuto");
-			//String stringPrezzoAutoPerGiorno = req.getParameter("stringPrezzoAutoPerGiorno");
+			String stringNumeroPostiAuto = req.getParameter("numeroPosti");
+//			String stringPrezzoAutoPerGiorno = req.getParameter("stringPrezzoAutoPerGiorno");
+			String tipologiaAuto = req.getParameter("tipologiaAuto");
+			String marcaAuto = req.getParameter("marcaAuto");
+			String modelloAuto = req.getParameter("modelloAuto");
+			String cambioAuto = req.getParameter("cambioAuto");
+			String carburante = req.getParameter("carburante");
 			
 			////////////////////////////////////////////////////////////////////////////
 			
 			Date dataInizioNoleggio = DataUtils.convertiDataFromString(stringDataInizioNoleggio);
 			Date dataFineNoleggio = DataUtils.convertiDataFromString(stringaDataFineNoleggio);
 			
-			req.getSession().setAttribute(Costanti.DATA_INIZIO_NOLEGGIO, dataInizioNoleggio);
-			req.getSession().setAttribute(Costanti.DATA_FINE_NOLEGGIO, dataFineNoleggio);
-
+			Integer numeroPostiAuto;
+			if (stringNumeroPostiAuto.isEmpty() || stringNumeroPostiAuto.equals("")) {
+				numeroPostiAuto = null;
+			}else {
+				numeroPostiAuto = Integer.valueOf(stringNumeroPostiAuto);
+			}
 			
-//			Integer numeroPostiAuto;
-//			if (stringNumeroPostiAuto.isEmpty() || stringNumeroPostiAuto.equals("")) {
-//				numeroPostiAuto = null;
-//			}else {
-//				numeroPostiAuto = Integer.valueOf(stringNumeroPostiAuto);
-//			}
-//			
 //			Double prezzoAutoPerGiorno;
 //			if (stringPrezzoAutoPerGiorno.isEmpty() || stringPrezzoAutoPerGiorno.equals("")) {
 //				prezzoAutoPerGiorno = null;
@@ -77,15 +78,18 @@ public class HomepageServlet extends HttpServlet {
 //				prezzoAutoPerGiorno = Double.valueOf(stringPrezzoAutoPerGiorno);
 //			}
 			
-			String tipologiaAuto = req.getParameter("tipologiaAuto");
-			String marcaAuto = req.getParameter("marcaAuto");
-			String modelloAuto = req.getParameter("modelloAuto");
-
-			//String cambioAuto = req.getParameter("cambioAuto");
 			
+			req.getSession().setAttribute(Costanti.DATA_INIZIO_NOLEGGIO, dataInizioNoleggio);
+			req.getSession().setAttribute(Costanti.DATA_FINE_NOLEGGIO, dataFineNoleggio);
 			req.getSession().setAttribute(Costanti.TIPOLOGIA_AUTO_SCELTA, tipologiaAuto);
+			req.getSession().setAttribute(Costanti.MARCA_AUTO_SCELTA, marcaAuto);
+			req.getSession().setAttribute(Costanti.MODELLO_AUTO_SCELTA,modelloAuto);
+			req.getSession().setAttribute(Costanti.CAMBIO_AUTO_SCELTA,cambioAuto);
+			req.getSession().setAttribute(Costanti.CARBURANTE_AUTO_SCELTA,carburante);
+			req.getSession().setAttribute(Costanti.NUMERO_POSTI_AUTO_SCELTA, numeroPostiAuto);
+			
 			//List <Auto> risultati = BusinessLogicAutoNoleggioUtils.filtroRicerca(dataInizioNoleggio, dataFineNoleggio, tipologiaAuto, businessLogicAuto, businessLogicNoleggio);
-			List<Auto> risultati = BusinessLogicAutoNoleggioUtils.filtroRicerca(dataInizioNoleggio, dataFineNoleggio, tipologiaAuto, businessLogicAuto, businessLogicNoleggio);
+			List<Auto> risultati = BusinessLogicAutoNoleggioUtils.filtroRicerca(dataInizioNoleggio, dataFineNoleggio, marcaAuto, modelloAuto, tipologiaAuto, businessLogicAuto, businessLogicNoleggio);
 
 			
 			req.getSession().setAttribute(Costanti.LISTA_COMPLETA_AUTO, risultati);
