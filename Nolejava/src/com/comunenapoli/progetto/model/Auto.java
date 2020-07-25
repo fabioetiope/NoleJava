@@ -10,9 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.xml.bind.annotation.XmlRootElement;
 
+
 @XmlRootElement
 @Entity
-public class Auto implements Serializable {
+public class Auto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -27,23 +28,22 @@ public class Auto implements Serializable {
 	private Double cilindrata = null;
 	private String colore = null;
 	private Integer numeroPosti = null;
-	
 	@Column(unique = true)
 	private String targa = null;
 	private String tipoCarburante = null;
 	private Double prezzoPerGiorno = null;
 	private String urlImg = null;
 	
-	@OneToOne(mappedBy = "auto")
-	private Noleggio noleggio = null;
-
+	@OneToOne(mappedBy="auto")
+	private Noleggio noleggio =null;
 	
 	public Auto() {
-		this (null, null, null, null, null, null, null, null, null, null, null);
+		this(null,null,null,null,null,null,null,null,null,null,null);
 	}
+	
 
-
-	public Auto(String tipologiaAuto, String marca, String modello, String cambio, Double cilindrata, String colore, Integer numeroPosti, String targa, String tipoCarburante, Double prezzoPerGiorno, String urlImg) {
+	public Auto(String tipologiaAuto, String marca, String modello, String cambio, Double cilindrata, String colore,
+			Integer numeroPosti, String targa, String tipoCarburante, Double prezzoPerGiorno, String urlImg) {
 		this.tipologiaAuto = tipologiaAuto;
 		this.marca = marca;
 		this.modello = modello;
@@ -62,122 +62,97 @@ public class Auto implements Serializable {
 		return idAuto;
 	}
 
-
 	public void setIdAuto(Integer idAuto) {
 		this.idAuto = idAuto;
 	}
-
 
 	public String getTipologiaAuto() {
 		return tipologiaAuto;
 	}
 
-
 	public void setTipologiaAuto(String tipologiaAuto) {
 		this.tipologiaAuto = tipologiaAuto;
 	}
-
 
 	public String getMarca() {
 		return marca;
 	}
 
-
 	public void setMarca(String marca) {
 		this.marca = marca;
 	}
-
 
 	public String getModello() {
 		return modello;
 	}
 
-
 	public void setModello(String modello) {
 		this.modello = modello;
 	}
-
 
 	public String getCambio() {
 		return cambio;
 	}
 
-
 	public void setCambio(String cambio) {
 		this.cambio = cambio;
 	}
-
 
 	public Double getCilindrata() {
 		return cilindrata;
 	}
 
-
 	public void setCilindrata(Double cilindrata) {
 		this.cilindrata = cilindrata;
 	}
-
 
 	public String getColore() {
 		return colore;
 	}
 
-
 	public void setColore(String colore) {
 		this.colore = colore;
 	}
-
 
 	public Integer getNumeroPosti() {
 		return numeroPosti;
 	}
 
-
 	public void setNumeroPosti(Integer numeroPosti) {
 		this.numeroPosti = numeroPosti;
 	}
-
 
 	public String getTarga() {
 		return targa;
 	}
 
-
 	public void setTarga(String targa) {
 		this.targa = targa;
 	}
-
 
 	public String getTipoCarburante() {
 		return tipoCarburante;
 	}
 
-
 	public void setTipoCarburante(String tipoCarburante) {
 		this.tipoCarburante = tipoCarburante;
 	}
-
 
 	public Double getPrezzoPerGiorno() {
 		return prezzoPerGiorno;
 	}
 
-
 	public void setPrezzoPerGiorno(Double prezzoPerGiorno) {
 		this.prezzoPerGiorno = prezzoPerGiorno;
 	}
-
 
 	public String getUrlImg() {
 		return urlImg;
 	}
 
-
 	public void setUrlImg(String urlImg) {
 		this.urlImg = urlImg;
 	}
-
-
 
 	public Noleggio getNoleggio() {
 		return noleggio;
@@ -186,11 +161,6 @@ public class Auto implements Serializable {
 
 	public void setNoleggio(Noleggio noleggio) {
 		this.noleggio = noleggio;
-	}
-
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 
@@ -291,23 +261,7 @@ public class Auto implements Serializable {
 			return false;
 		return true;
 	}
-
-
-	@Override
-	public String toString() {
-		return "Auto [idAuto=" + idAuto + ", tipologiaAuto=" + tipologiaAuto + ", marca=" + marca + ", modello="
-				+ modello + ", cambio=" + cambio + ", cilindrata=" + cilindrata + ", colore=" + colore
-				+ ", numeroPosti=" + numeroPosti + ", targa=" + targa + ", tipoCarburante=" + tipoCarburante
-				+ ", prezzoPerGiorno=" + prezzoPerGiorno + ", urlImg=" + urlImg + ", noleggio=" + noleggio + "]";
-	}
-
-
-	
-
-	
-	
 	
 	
 	
 }
-	

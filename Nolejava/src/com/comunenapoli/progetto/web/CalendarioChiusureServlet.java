@@ -22,12 +22,14 @@ import com.comunenapoli.progetto.model.Utente;
 import com.comunenapoli.progetto.utils.Costanti;
 import com.comunenapoli.progetto.utils.DataUtils;
 
-/**
- * Servlet implementation class CalendarioChiusureServlet
- */
-@WebServlet("/CalendarioChiusureServlet")
+@WebServlet("/calendarioChiusureServlet")
 public class CalendarioChiusureServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+       
+    public CalendarioChiusureServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
@@ -40,39 +42,24 @@ public class CalendarioChiusureServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setHeader("Last-modified", LocalDateTime.now().toString());
 		response.setHeader("Cache-control", "no-store");
-		
-		BusinessLogicNoleggio businessLogicNoleggio = (BusinessLogicNoleggio) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_NOLEGGIO);
-
-		String stringIdNoleggio = request.getParameter("idNoleggio");
+		try {
+		BusinessLogicNoleggio businessLogicNoleggio = (BusinessLogicNoleggio)getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_NOLEGGIO);
 		String action = request.getParameter("action").toLowerCase();
-				
-			
-			try {
-			String dataInizioString = request.getParameter("dataInizio").toLowerCase();
-			String dataFineString = request.getParameter("dataFine").toLowerCase();
-			
-			
-			Date dataInizio = DataUtils.convertiDataFromString(dataInizioString);
-			Date dataFine = DataUtils.convertiDataFromString(dataFineString);
-
-			CalendarioChiusure calendario = new CalendarioChiusure (dataInizio, dataFine);
-			
-			businessLogicNoleggio.cancellaNoleggiByDataInizioDataFine(dataInizio, dataFine);
-			
-			
-			
-			List <CalendarioChiusure> chiusure = businessLogicNoleggio.getChiusure();
-			request.getSession().setAttribute(Costanti.LISTA_COMPLETA_CHIUSURE, chiusure);
-			request.getRequestDispatcher("/jsp/calendario.jsp").forward(request, response);
-
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			 
+		String dataInizioString = request.getParameter("datainizio");
+		String dataFineString = request.getParameter("datafine");
+		Date dataInizio = DataUtils.convertiDataFromString(dataInizioString);
+		Date dataFine = DataUtils.convertiDataFromString(dataFineString);
+		businessLogicNoleggio.deleteNoleggiByDataInizioDataFine(dataInizio,dataFine);
 		
-		
+		List<CalendarioChiusure> calendarioChiusureList = businessLogicNoleggio.getListaCalendarioChiusure();
+		request.getSession().setAttribute(Costanti.LISTA_COMPLETA_CHIUSURE, calendarioChiusureList);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String html = "/jsp/private/calendario.jsp";
+		request.getRequestDispatcher(html).forward(request,response);
 	}
+		
 	
-
-}
+	}

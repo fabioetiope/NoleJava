@@ -19,11 +19,10 @@ import com.comunenapoli.progetto.model.Noleggio;
 import com.comunenapoli.progetto.model.Utente;
 import com.comunenapoli.progetto.utils.Costanti;
 
-/**
- * Servlet implementation class ProfiloClienteServlet
- */
-@WebServlet("/ProfiloClienteServlet")
+
+@WebServlet("/profiloClienteServlet")
 public class ProfiloClienteServlet extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -37,12 +36,13 @@ public class ProfiloClienteServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setHeader("Last-modified", LocalDateTime.now().toString());
 		response.setHeader("Cache-control", "no-store");
+		//TODO filtro area solo admin e staff
 		
 		Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
 		BusinessLogicUtente businessLogicUtente = (BusinessLogicUtente)getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_UTENTE);
 		BusinessLogicCarta businessLogicCarta = (BusinessLogicCarta)getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_CARTA);
 		
-		List<Utente> utentiNonVerificati = businessLogicUtente.listaUtentiNonVerificati();
+		List<Utente> utentiNonVerificati = businessLogicUtente.listaUtentiNonVerificato();
 		List<Utente> listaUtenti = businessLogicUtente.getListaUtenti();
 		
 		request.setAttribute(Costanti.LISTA_UTENTI_NON_VERIFICATI, utentiNonVerificati);
@@ -51,13 +51,14 @@ public class ProfiloClienteServlet extends HttpServlet {
 		String html = "/jsp/";
 		String action = request.getParameter("action").toLowerCase();
 		if (action.contains("dati personali")) {
-			html += "datiPersonali.jsp";
+			html += "datipersonali.jsp";
 		}
 		else if (action.contains("prenotazioni")) {
 			BusinessLogicNoleggio businessLogicNoleggio = (BusinessLogicNoleggio)getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_NOLEGGIO);
-			List <Noleggio> noleggiUtente = businessLogicNoleggio.getNoleggiByUtente(utente);
+			List<Noleggio> noleggiUtente = businessLogicNoleggio.getNoleggiByUtente(utente);
 			request.getSession().setAttribute(Costanti.NOLEGGI_UTENTE, noleggiUtente);
-			html += "prenotazioniCliente.jsp";
+
+			html += "prenotazionicliente.jsp";
 		}
 		else if (action.contains("dati carta")) {
 			request.getSession().setAttribute(Costanti.PROFILO_CLIENTE, true);
@@ -71,6 +72,8 @@ public class ProfiloClienteServlet extends HttpServlet {
 		requestDispatcher = request.getRequestDispatcher(html);
 		requestDispatcher.forward(request, response);
 
+
 	}
 
 }
+

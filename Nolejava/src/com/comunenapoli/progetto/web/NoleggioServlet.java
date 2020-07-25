@@ -18,7 +18,7 @@ import com.comunenapoli.progetto.model.Utente;
 import com.comunenapoli.progetto.utils.Costanti;
 
 
-@WebServlet("/NoleggioServlet")
+@WebServlet("/noleggioServlet")
 public class NoleggioServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -50,7 +50,7 @@ public class NoleggioServlet extends HttpServlet {
 				//TODO patente valida, vai form carta
 				if (responsoCarta == 1) {
 					//TODO manda al form finale di noleggio
-					html = "/jsp/concludiNoleggio.jsp";
+					html = "/jsp/concludinoleggio.jsp";
 					RequestDispatcher requestDispatcher; 
 					requestDispatcher = request.getRequestDispatcher(html);
 					requestDispatcher.forward(request, response);

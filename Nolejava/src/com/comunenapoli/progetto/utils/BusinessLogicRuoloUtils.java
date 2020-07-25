@@ -10,10 +10,10 @@ public class BusinessLogicRuoloUtils {
 	
 	public static void generaRuoli(EntityManager entityManager) { 
 		RuoloDao ruoloDao = new RuoloDao(entityManager);
-	    BusinessLogicRuolo businessLogicRuolo = new BusinessLogicRuolo(ruoloDao,entityManager);
-	    Ruolo ruoloAdmin = new Ruolo("admin", 1);
-	    Ruolo ruoloStaff = new Ruolo("staff", 2);
-	    Ruolo ruoloCliente = new Ruolo("cliente", 3);
+	    BusinessLogicRuolo businessLogicRuolo = new BusinessLogicRuolo(entityManager,ruoloDao);
+	    Ruolo ruoloAdmin = new Ruolo(1,"admin");
+	    Ruolo ruoloStaff = new Ruolo(2,"staff");
+	    Ruolo ruoloCliente = new Ruolo(3,"cliente");
 	    businessLogicRuolo.createRuolo(ruoloAdmin);
 	    businessLogicRuolo.createRuolo(ruoloStaff);
 	    businessLogicRuolo.createRuolo(ruoloCliente);

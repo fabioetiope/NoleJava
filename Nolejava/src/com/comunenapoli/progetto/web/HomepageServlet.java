@@ -1,10 +1,13 @@
 package com.comunenapoli.progetto.web;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,89 +23,106 @@ import com.comunenapoli.progetto.utils.Costanti;
 import com.comunenapoli.progetto.utils.DataUtils;
 
 
-@WebServlet("/HomepageServlet")
+@WebServlet("/homepageServlet")
 public class HomepageServlet extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
-	
-	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	{
-		doPost(req,resp);
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		response.setHeader("Last-modified", LocalDateTime.now().toString());
+		response.setHeader("Cache-control", "no-store");
+		doPost(request, response);
 	}
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-		//String idAuto = req.getParameter("bottone");
-		
-		List <Auto> listaCompletaAuto;
-		
-		Utente utente = (Utente) req.getSession().getAttribute(Costanti.USER_IN_SESSION);
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
+		response.setHeader("Last-modified", LocalDateTime.now().toString());
+		response.setHeader("Cache-control", "no-store");
+		Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
 		BusinessLogicNoleggio businessLogicNoleggio = (BusinessLogicNoleggio) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_NOLEGGIO);
 		BusinessLogicAuto businessLogicAuto = (BusinessLogicAuto) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_AUTO);
-
-		String hidden = req.getParameter("formCompilato");
+		List<Auto> listaAuto = new ArrayList<Auto>();
 		
-		if (hidden == null || hidden.isEmpty() || hidden == "" || hidden.equals("")) {
-			listaCompletaAuto = businessLogicAuto.getListaCompletaAuto();
-			req.getSession().setAttribute(Costanti.LISTA_COMPLETA_AUTO, listaCompletaAuto);
-			req.getRequestDispatcher("/jsp/homepage.jsp").forward(req, resp);
-		}else {
-			try {
-			String stringDataInizioNoleggio = req.getParameter("dataInizio");
-			String stringaDataFineNoleggio = req.getParameter("dataFine");
-			String stringNumeroPostiAuto = req.getParameter("numeroPosti");
-//			String stringPrezzoAutoPerGiorno = req.getParameter("stringPrezzoAutoPerGiorno");
-			String tipologiaAuto = req.getParameter("tipologiaAuto");
-			String marcaAuto = req.getParameter("marcaAuto");
-			String modelloAuto = req.getParameter("modelloAuto");
-			String cambioAuto = req.getParameter("cambioAuto");
-			String carburante = req.getParameter("carburante");
-			
-			////////////////////////////////////////////////////////////////////////////
-			
-			Date dataInizioNoleggio = DataUtils.convertiDataFromString(stringDataInizioNoleggio);
-			Date dataFineNoleggio = DataUtils.convertiDataFromString(stringaDataFineNoleggio);
-			
-			Integer numeroPostiAuto;
-			if (stringNumeroPostiAuto.isEmpty() || stringNumeroPostiAuto.equals("")) {
-				numeroPostiAuto = null;
-			}else {
-				numeroPostiAuto = Integer.valueOf(stringNumeroPostiAuto);
-			}
-			
-//			Double prezzoAutoPerGiorno;
-//			if (stringPrezzoAutoPerGiorno.isEmpty() || stringPrezzoAutoPerGiorno.equals("")) {
-//				prezzoAutoPerGiorno = null;
-//			}else {
-//				prezzoAutoPerGiorno = Double.valueOf(stringPrezzoAutoPerGiorno);
-//			}
-			
-			
-			req.getSession().setAttribute(Costanti.DATA_INIZIO_NOLEGGIO, dataInizioNoleggio);
-			req.getSession().setAttribute(Costanti.DATA_FINE_NOLEGGIO, dataFineNoleggio);
-			req.getSession().setAttribute(Costanti.TIPOLOGIA_AUTO_SCELTA, tipologiaAuto);
-			req.getSession().setAttribute(Costanti.MARCA_AUTO_SCELTA, marcaAuto);
-			req.getSession().setAttribute(Costanti.MODELLO_AUTO_SCELTA,modelloAuto);
-			req.getSession().setAttribute(Costanti.CAMBIO_AUTO_SCELTA,cambioAuto);
-			req.getSession().setAttribute(Costanti.CARBURANTE_AUTO_SCELTA,carburante);
-			req.getSession().setAttribute(Costanti.NUMERO_POSTI_AUTO_SCELTA, numeroPostiAuto);
-			
-			//List <Auto> risultati = BusinessLogicAutoNoleggioUtils.filtroRicerca(dataInizioNoleggio, dataFineNoleggio, tipologiaAuto, businessLogicAuto, businessLogicNoleggio);
-			List<Auto> risultati = BusinessLogicAutoNoleggioUtils.filtroRicerca(dataInizioNoleggio, dataFineNoleggio, marcaAuto, modelloAuto, tipologiaAuto, businessLogicAuto, businessLogicNoleggio);
-
-			
-			req.getSession().setAttribute(Costanti.LISTA_COMPLETA_AUTO, risultati);
-			//TODO ricarica pagina
-			req.getRequestDispatcher("/jsp/homepage.jsp").forward(req, resp);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-
-
+		//TODO campo nascosto obbligatorio con value form
+		String hidden = request.getParameter("formcompliato");
+		String html = "/jsp/homepage.jsp";
+		boolean isHiddenEmpty = hidden==null || hidden.isEmpty() || hidden.equals("");
+		if (isHiddenEmpty) {
+			listaAuto = businessLogicAuto.getListaCompletaAuto();
+			request.getSession().setAttribute(Costanti.LISTA_COMPLETA_AUTO, listaAuto);
+		} else {
+			listaAuto = effettuaRicerca(request, businessLogicAuto,businessLogicNoleggio);
+			html += "#lista-auto";
 		}
 		
+			
+			System.out.println("Lista auto " + request.getSession().getAttribute(Costanti.LISTA_COMPLETA_AUTO));
+			RequestDispatcher requestDispatcher; 
+			requestDispatcher = request.getRequestDispatcher(html);
+			requestDispatcher.forward(request, response);
+
 	}
+
+	private List<Auto> effettuaRicerca(HttpServletRequest request, BusinessLogicAuto businessLogicAuto, BusinessLogicNoleggio businessLogicNoleggio) {
+		try {
+		
+			String dataInizioNoleggioString = request.getParameter("datainizio");
+			String dataFineNoleggioString = request.getParameter("datafine");
+			String numeroPostiString = request.getParameter("numeroPosti");
+			String prezzoAutoPerGiornoString = request.getParameter("prezzopergiorno");
+			
+			Date dataInizio = DataUtils.convertiDataFromString(dataInizioNoleggioString);
+			Date dataFine = DataUtils.convertiDataFromString(dataFineNoleggioString);
+			
+			request.getSession().setAttribute(Costanti.DATA_INIZIO_NOLEGGIO, dataInizio);
+			request.getSession().setAttribute(Costanti.DATA_FINE_NOLEGGIO, dataFine);
+
+			
+			String tipologiaAuto = request.getParameter("tipologia");
+			String marcaAuto = request.getParameter("marca");
+			String modelloAuto = request.getParameter("modello");
+			String cambioAuto = request.getParameter("cambio");			
+			String tipologiaCarburante = request.getParameter("carburante");
+			Integer numeroPosti = null;
+			
+
+
+
+			if (numeroPostiString!=null && numeroPostiString.isEmpty()) {
+				request.getSession().setAttribute(Costanti.NUMERO_POSTI_AUTO_SCELTA,cambioAuto);
+				numeroPosti = Integer.parseInt(numeroPostiString);
+			}
+			
+			System.out.println("dataInizio: " + dataInizio);
+			System.out.println("dataFine: " + dataFine);
+			System.out.println("marcaAuto: " + marcaAuto);
+			System.out.println("modelloAuto: " + modelloAuto);
+			System.out.println("cambioAuto: " + cambioAuto);
+			System.out.println("tipologiaCarburante: " + tipologiaCarburante);
+			System.out.println("numeroPosti: " + numeroPosti);
+			System.out.println("tipologiaAuto: " + tipologiaAuto);
+			
+			request.getSession().setAttribute(Costanti.TIPOLOGIA_AUTO_SCELTA, tipologiaAuto);
+			request.getSession().setAttribute(Costanti.MARCA_AUTO_SCELTA, marcaAuto);
+			request.getSession().setAttribute(Costanti.MODELLO_AUTO_SCELTA,modelloAuto);
+			request.getSession().setAttribute(Costanti.CAMBIO_AUTO_SCELTA,cambioAuto);
+			request.getSession().setAttribute(Costanti.CARBURANTE_AUTO_SCELTA,tipologiaCarburante);
+			request.getSession().setAttribute(Costanti.NUMERO_POSTI_AUTO_SCELTA, numeroPosti);
+
+			
+			//List<Auto> risultati = BusinessLogicAutoNoleggioUtils.filtroRicerca(dataInizio, dataFine, tipologiaAuto, businessLogicAuto, businessLogicNoleggio);
+			List<Auto> risultati = BusinessLogicAutoNoleggioUtils.filtroRicerca(dataInizio, dataFine, marcaAuto, modelloAuto, cambioAuto, numeroPosti, tipologiaCarburante, tipologiaAuto, businessLogicAuto, businessLogicNoleggio);
+
+			request.getSession().setAttribute(Costanti.LISTA_COMPLETA_AUTO, risultati);
+			//TODO reindirizza alla jsp passandogli la request e response
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }
+

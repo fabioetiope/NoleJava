@@ -20,10 +20,10 @@ public class BusinessLogicUtenteUtils {
 	    String nome = "Gennaro";
 	    String cognome = "Esposito";
 	    Ruolo ruolo = new Ruolo();
-	    ruolo.setIdRuolo(Costanti.ID_RUOLO_ADMIN);
+	    ruolo.setId(Costanti.ID_RUOLO_ADMIN);
 	    ruolo.setNomeRuolo("admin");
 	    LocalDate dataNascitaLD = LocalDate.of(1993, 05, 19);
-	    Date dataNascita = DataUtils.convertiFromLocalDate(dataNascitaLD);
+	    Date dataNascita = DataUtils.convertiDataFromLocalDate(dataNascitaLD);
 
 	    Utente utente = new Utente(username,password,nome,cognome,dataNascita,ruolo);
 	    utente.setIsVerificato(true);

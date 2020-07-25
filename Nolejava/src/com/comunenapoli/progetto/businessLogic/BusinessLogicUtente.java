@@ -1,8 +1,6 @@
 package com.comunenapoli.progetto.businessLogic;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -14,46 +12,85 @@ import com.comunenapoli.progetto.utils.DataUtils;
 
 
 public class BusinessLogicUtente {
-	
+
 	private UtenteDao utenteDao = null;
-	private EntityManager entityManager = null;
-	
-	public BusinessLogicUtente(UtenteDao utenteDao, EntityManager entityManager) {
-		this.utenteDao = utenteDao;
-		this.entityManager = entityManager;
+	private EntityManager em = null;
+
+	public BusinessLogicUtente (EntityManager em ,UtenteDao utenteDao) {
+		setEm(em);
+		setUtenteDao(utenteDao);
 	}
-	
-	public BusinessLogicUtente(EntityManager entityManager, UtenteDao utenteDao) {
-		this.utenteDao = utenteDao;
-		this.entityManager = entityManager;
+
+	public UtenteDao getUtenteDao() {
+		return utenteDao; 
 	}
-	
+
+	public void setUtenteDao(UtenteDao utenteDao) {
+		this.utenteDao = utenteDao;
+	}
+
+	public EntityManager getEm() {
+		return em;
+	}
+
+
+	public void setEm(EntityManager em) {
+		this.em = em;
+	}
+
 	public Integer getRuolo(String user,String passw) {
-		Utente utente = login(user, passw);
+		Utente utente = login(user,passw);
 		Integer idRuolo = 0;
-		
-		if (utente != null) {
-			idRuolo = checkRuolo(utente.getIdUtente());
+		if (utente!=null) {
+			Integer idUtente = utente.getIdUtente();
+			idRuolo = checkRuolo(idUtente);
 		}
-		
 		return idRuolo;
-		
 	}
-	
+
 	public void create(Utente utente) {
-		entityManager.getTransaction().begin();
+		em.getTransaction().begin();
 		try {
 			utenteDao.create(utente);
-			entityManager.getTransaction().commit();
+			em.getTransaction().commit();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			entityManager.getTransaction().rollback();
+			em.getTransaction().rollback();
 		}
 	}
-	
+
+	public void update(Utente utente) {
+		em.getTransaction().begin();
+		try {
+			utenteDao.update(utente);
+			em.getTransaction().commit();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+		}
+	}
+
+
+	public void delete(Integer idUtente) {
+		em.getTransaction().begin();
+		try {
+			Utente utente = utenteDao.findUtenteByIdUtente(idUtente);
+			if (utente!=null) {
+				utenteDao.delete(utente);
+				em.getTransaction().commit();
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			em.getTransaction().rollback();
+		}
+	}
+
+
 	public Utente login(String username, String password) {
-		entityManager.getTransaction().begin();
+		em.getTransaction().begin();
 		Utente utente = null;
 		try {
 			List<Utente> listaUtente = utenteDao.findByUsernameAndPassword(username, password);
@@ -66,32 +103,37 @@ public class BusinessLogicUtente {
 				if (!checkUserPass) {
 					utente = null;
 				}
-			}	
-			entityManager.getTransaction().commit();
+			}
+			em.getTransaction().commit();
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			entityManager.getTransaction().rollback();
+			em.getTransaction().rollback();
 		}
 		return utente;
 	}
-	
+
 	public Integer checkRuolo(Integer idUtente) {
 		Integer idRuolo = 0;
-		idRuolo = utenteDao.findRuoloByIdUtente(idUtente);
+		if (idUtente!=null) {
+			idRuolo = utenteDao.findRuoloByIdUtente(idUtente);
+		}
 		return idRuolo;
 	}
-	
+
 	public boolean isNuovoUtente(Utente utente) {
-		if (utente != null) {
-			if (! utenteDao.checkUsername(utente.getUsername())) {
+		boolean isNuovoUtente = false;
+		if (utente!=null) {
+			String username = utente.getUsername();
+			boolean isRegistrato = utenteDao.checkUsername(username);
+			if (!isRegistrato) {
 				create(utente);
-				return true;
+				isNuovoUtente = true;
 			}
 		}
-		return false;
+		return isNuovoUtente;
 	}
-	
+
 	public boolean isVerificato(Integer idUtente) {
 		boolean checkVerifica = false;
 		if (idUtente!=null) {
@@ -99,136 +141,115 @@ public class BusinessLogicUtente {
 		}
 		return checkVerifica;
 	}
-	
-	public boolean verificaUtente(Utente utente, boolean haAccettato) {
+
+	public boolean verificaUtente(Utente utente, boolean isAccettato) {
+		System.out.println("verifica utente");
 		if (utente!=null) {
 			Integer idUtente = utente.getIdUtente();
-			if (!isVerificato(idUtente) && haAccettato) {
-					utente.setIsVerificato(true);
-					//utenteDao.updateVerifica(utente);
-					update(utente);
-					return true;
-			}
+			if (!isVerificato(idUtente) && isAccettato) {
+				utente.setIsVerificato(true);
+				update(utente);
+			} else {
+				isAccettato = false;
+			}	
 		}
-		return false;
-
+		return isAccettato;
 	}
-	
 
-	public void update(Utente utente) {
-		entityManager.getTransaction().begin();
-		try {
-			utenteDao.update(utente);
-			entityManager.getTransaction().commit();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			entityManager.getTransaction().rollback();
-		}
-	}
-	
-	public Integer updateDatiPersonali(Utente utente, String nome, String cognome, String username, String password) {
-		int counter = 0; 
-		
-		if (username != null && !username.isEmpty() && !username.equals(utente.getUsername())) {
+	public Integer updateDatiPersonali(Utente utente, String username, String password, String nome, String cognome) {
+		boolean checkUsername = username!=null && !username.equals("") && !username.equals(utente.getUsername());
+		boolean checkPassword = password!=null && !password.equals("") && !password.equals(utente.getPassword());
+		boolean checkNome = nome!=null && !nome.equals("") && !nome.equals(utente.getNome());
+		boolean checkCognome = cognome!=null && !cognome.equals("") && !cognome.equals(utente.getCognome());
+		Integer count = 0;
+		if (checkUsername){
 			utente.setUsername(username);
-			counter++;
+			count++;
 		}
-		if (password != null && !password.isEmpty() && !password.equals(utente.getPassword())) {
+		if (checkPassword){
 			utente.setPassword(password);
-			counter++;
+			count++;
 		}
-		if (nome != null && !nome.isEmpty() && !nome.equals(utente.getNome())) {
-			utente.setNome(nome);
-			counter++;
+		if (checkNome){
+			utente.setNome(cognome);
+			count++;
 		}
-		if (cognome != null && !cognome.isEmpty() && !cognome.equals(utente.getCognome())) {
+		if (checkCognome) {
 			utente.setCognome(cognome);
-			counter++;
+			count++;
 		}
-		if (counter>0) {
+		if (count>0) { 					
 			update(utente);
 		}
-		return counter;
+		return count;
 	}
-	
+
+	//TODO aggiustare quando utente già è staff
 	public boolean updateRuolo(Utente utente, Integer idRuolo) {
 		Integer idRuoloStaff = Costanti.ID_RUOLO_STAFF;
 		String ruoloStaff = Costanti.RUOLO_STAFF;
 		boolean checkPromozione = idRuolo == idRuoloStaff;
 		if (checkPromozione) {
 			Ruolo ruolo = new Ruolo();
-			ruolo.setIdRuolo(idRuolo);
+			ruolo.setId(idRuolo);
 			ruolo.setNomeRuolo(ruoloStaff);
-			utente.setRuoloUtente(ruolo);
+			utente.setRuolo(ruolo);
 			update(utente);
 			return true;
 		}
 		return false;
 	}
-	
-	
-	public void deleteUtente(Integer id) {
-		entityManager.getTransaction().begin();
-		try {
-			Utente utente = utenteDao.findUtentebyId(id);
-			if (utente != null) {
-				utenteDao.delete(utente);
-				entityManager.getTransaction().commit();
-			}
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			entityManager.getTransaction().rollback();
-		}
-	}
-	
-	
 
-	
+
 	public Integer registrazione (Utente utente) throws Exception {
-		if (DataUtils.dataNascita(utente.getDataNascita()) && !utenteDao.checkUsername(utente.getUsername())) {
+		String username = utente.getUsername();
+		Date dataNascita = utente.getDataNascita();
+		boolean checkUsername = utenteDao.checkUsername(username);
+		if (!checkUsername && DataUtils.dataNascita(dataNascita)) {
 			create(utente);
 			return Costanti.REGISTRAZIONE_VALIDA;
-		} else if (! DataUtils.dataNascita(utente.getDataNascita())){
-			return Costanti.REGISTRAZIONE_FALLITA_ETA;
 		} else {
-			return Costanti.REGISTRAZIONE_FALLITA_UTENTE_GIA_ESISTENTE;
+			if (checkUsername && !DataUtils.dataNascita(dataNascita)) {
+				return Costanti.REGISTRAZIONE_FALLITA_UTENTE_ESISTENTE;
+			}
+			else {
+				return Costanti.REGISTRAZIONE_FALLITA_ETA;
+			}
 		}
-		
 	}
-	
+
+
 	public boolean isEmailValid (String email) {
+		boolean isValid = false;
 		String chiocciola = "@";
-		String dot =".";
-		
-		if(email.contains(chiocciola) && email.contains(dot)) {
-			return true;
+		String dot = ".";
+		if (email.contains(chiocciola) && email.contains(dot)) {
+			isValid = true;
 		}
-		
-		return false;
+		return isValid;
 	}
-	
-	public List<Utente> listaUtentiNonVerificati(){
-		return utenteDao.findByIsVerificato();
+
+	public List<Utente> listaUtentiNonVerificato(){
+		List<Utente> utenti = utenteDao.findByIsVerificato();
+		return utenti;
 	}
-	
-	
+
 	public Utente getUtenteById(Integer idUtente) {
-		return utenteDao.findUtentebyId(idUtente);
+		Utente utente = utenteDao.findUtenteByIdUtente(idUtente);
+		return utente;
 	}
-	
+
 	public List<Utente> getListaUtenti(){
 		List<Utente> utenti = utenteDao.retrieve();
 		return utenti;
 	}
-	
-	
-	public Utente getUtenteByUsername(String username) {
-		return utenteDao.findUtenteByUsername(username);
+
+	public Utente getUtenteByEmail(String username) {
+		Utente utente = utenteDao.findUtenteByUsername(username);
+		return null;
 	}
-	
-	
-	
-	
+
+
+
+
 }

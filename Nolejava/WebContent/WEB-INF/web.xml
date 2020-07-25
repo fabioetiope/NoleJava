@@ -28,6 +28,6 @@
   
   
   <welcome-file-list>
-    <welcome-file>HomepageServlet</welcome-file>
+    <welcome-file>homepageServlet</welcome-file>
   </welcome-file-list>
 </web-app>

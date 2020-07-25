@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,12 +15,9 @@ import com.comunenapoli.progetto.businessLogic.BusinessLogicPatente;
 import com.comunenapoli.progetto.model.Utente;
 import com.comunenapoli.progetto.utils.Costanti;
 
-/**
- * Servlet implementation class PatenteServlet
- */
-@WebServlet("/PatenteServlet")
+@WebServlet("/patenteServlet")
 public class PatenteServlet extends HttpServlet {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -31,34 +27,28 @@ public class PatenteServlet extends HttpServlet {
 		doPost(request, response);
 	}
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
 		response.setHeader("Last-modified", LocalDateTime.now().toString());
 		response.setHeader("Cache-control", "no-store");
-		
-		BusinessLogicPatente businessLogicPatente = (BusinessLogicPatente) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_PATENTE);
 		Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
-		
-		String dataScadenza = request.getParameter("dataScadenza");
-		String numeroPatente = request.getParameter("numeroPatente");
-		
-		
+		String username = utente.getUsername();
+		BusinessLogicPatente businessLogicPatente = (BusinessLogicPatente) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_PATENTE);
+		String dataScadenza = request.getParameter("datascadenza");
+		String numeroPatente = request.getParameter("numeropatente");
 		try {
-			businessLogicPatente.operazioniPatente(dataScadenza, numeroPatente, utente);
-			request.getRequestDispatcher("/NoleggioServlet").forward(request, response);
-			System.out.println("sono in patente servlet");
-//			ServletContext context = getServletContext();
-//			RequestDispatcher requestVar = context.getNamedDispatcher("NoleggioServlet");
-			
-			//response.sendRedirect("/NoleggioServlet");
-			
+			 businessLogicPatente.operazionePatente(utente, dataScadenza, numeroPatente);
+			 //TODO vai a noleggioServlet e verifica carta
+		     String html = "/noleggioServlet";
+			RequestDispatcher requestDispatcher; 
+			//response.sendRedirect(html);
+			requestDispatcher = request.getRequestDispatcher(html);
+			requestDispatcher.forward(request, response);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
+
 }
-	
-		
+

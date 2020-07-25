@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 
 public class DataUtils {
 	
-	public static Date convertiFromLocalDate(LocalDate localDate) {
+	public static Date convertiDataFromLocalDate(LocalDate localDate) {
 		Date date = Date.valueOf(localDate);
 		return date;
 	}
@@ -73,6 +73,16 @@ public class DataUtils {
 	    long differenzaGiorniLong = diff / (24 * 60 * 60 * 1000) + 1;
 	    differenzaGiorni = (int) differenzaGiorniLong;
 	    return differenzaGiorni;
+	}
+
+	public static Date getDataCompletaFromMeseEdAnno(Integer mese, Integer anno) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(Calendar.MONTH, mese);
+        calendar.set(Calendar.YEAR, anno);
+        java.util.Date date = calendar.getTime();
+        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+        return sqlDate;
 	}
 	
 }

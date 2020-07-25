@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDateTime;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +18,7 @@ import com.comunenapoli.progetto.utils.Costanti;
 import com.comunenapoli.progetto.utils.DataUtils;
 
 
-@WebServlet("/registrazione")
+@WebServlet("/registrazioneServlet")
 public class RegistrazioneServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -33,32 +34,44 @@ public class RegistrazioneServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setHeader("Last-modified", LocalDateTime.now().toString());
 		response.setHeader("Cache-control", "no-store");
-		String nome = request.getParameter("nome");
-		String cognome = request.getParameter("cognome");
-		String dataNascitaString = request.getParameter("dataNascita");
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		String staff = request.getParameter("staff");
-		Integer effettuaRegistrazione = effettuaRegistrazione(nome,cognome,dataNascitaString,email,password,staff);
-		System.out.println("utente registrato");
+		Integer effettuaRegistrazione = effettuaRegistrazione(request);
+		String html = "";
 		if (effettuaRegistrazione == Costanti.REGISTRAZIONE_VALIDA) {
 			//TODO registrazione avvenuta con successo, attendi conferma
+			
+			response.getWriter().println("<h1>Registrazione effettuata. Attendi la conferma.</h1>");
+			//TODO pagina che rimanda
 		}
 		else if (effettuaRegistrazione == Costanti.REGISTRAZIONE_FALLITA_ETA) {
 			//TODO registrazione non avvenuta, sei minorenne, rimanda in homepage
+			response.getWriter().println("<h1>Registrazione fallita, sei minorenne.</h1>");
+
 		}
-		else if (effettuaRegistrazione == Costanti.REGISTRAZIONE_FALLITA_UTENTE_GIA_ESISTENTE) {
+		else if (effettuaRegistrazione == Costanti.REGISTRAZIONE_FALLITA_UTENTE_ESISTENTE) {
 			//TODO registrazione non avvenuta, utente esistente, rimanda al login
+			response.getWriter().println("<h1>Utente già registrato nel database.</h1>");
+
 		}
 		else {
 			//TODO errore generico, rimanda alla homepage senza errore
+			response.getWriter().println("<h1>Non ho la minima idea di cosa sia successo.</h1>");
+
 		}
+		RequestDispatcher requestDispatcher; 
+		requestDispatcher = request.getRequestDispatcher(html);
+		requestDispatcher.forward(request, response);
 	
 	}
 	
 	
-	public Integer effettuaRegistrazione (String nome, String cognome, String dataNascitaString, String email, String password, String staff) {
+	public Integer effettuaRegistrazione (HttpServletRequest request) {
 		BusinessLogicUtente businessLogicUtente = (BusinessLogicUtente)getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_UTENTE);
+		String nome = request.getParameter("nome");
+		String cognome = request.getParameter("cognome");
+		String dataNascitaString = request.getParameter("datanascita");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		String staff = request.getParameter("staff");
 		boolean checkNome = nome!=null && !nome.equals("");
 		boolean checkCognome = cognome!=null && !cognome.equals("");
 		boolean checkDataNascita = dataNascitaString!=null && !dataNascitaString.equals("");
@@ -68,20 +81,23 @@ public class RegistrazioneServlet extends HttpServlet {
 		boolean checkCondizioni = checkNome && checkCognome && checkDataNascita && checkEmail && checkPassword;		
 		Integer checkRegistrazione = Costanti.ERRORE_GENERICO;
 		try {
-			Date dataNascita = DataUtils.convertiDataFromString(dataNascitaString);
-			if (checkCondizioni && DataUtils.dataNascita(dataNascita)) {
+		    Date dataNascita = DataUtils.convertiDataFromString(dataNascitaString);
+		    boolean checkMaggiorenne = DataUtils.dataNascita(dataNascita);
+			if (checkCondizioni && checkMaggiorenne) {
 				Ruolo ruoloUtente = new Ruolo();
 				if (isStaff) {
-					ruoloUtente.setIdRuolo(Costanti.ID_RUOLO_STAFF);
+					ruoloUtente.setId(Costanti.ID_RUOLO_STAFF);
 					ruoloUtente.setNomeRuolo(Costanti.RUOLO_STAFF);
 				}
 				else {
-					ruoloUtente.setIdRuolo(Costanti.ID_RUOLO_CLIENTE);
+					ruoloUtente.setId(Costanti.ID_RUOLO_CLIENTE);
 					ruoloUtente.setNomeRuolo(Costanti.RUOLO_CLIENTE);
 				}
 				Utente utente = new Utente(email,password,nome,cognome,dataNascita,ruoloUtente);
-				checkRegistrazione = businessLogicUtente.registrazione(utente);
-			
+				checkRegistrazione = businessLogicUtente.registrazione(utente);			
+			}
+			else if (!checkMaggiorenne) {
+				checkRegistrazione = Costanti.REGISTRAZIONE_FALLITA_ETA;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -89,7 +105,6 @@ public class RegistrazioneServlet extends HttpServlet {
 		}
 		return checkRegistrazione;
 	}
-	
-}
 
+}
 

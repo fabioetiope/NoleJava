@@ -51,11 +51,10 @@ public class PatenteDao implements DaoInterface<Patente> {
 		manager.remove(patente);
 	}
 	
-	public Patente findPatenteByUtente(Utente utente) {		
+	public Patente findPatenteByUtente(Utente utente) {
 		TypedQuery<Patente> query = manager.createQuery("select p from Patente p where p.utente = :x",Patente.class);
 		Patente patente = query.setParameter("x",utente).getResultList().stream().findFirst().orElse(null);
 		return patente;
-	
 	}
 	
 	public Patente findPatenteByNumeroPatente(String numeroPatente) {
@@ -63,5 +62,7 @@ public class PatenteDao implements DaoInterface<Patente> {
 		Patente patente = query.setParameter("x",numeroPatente).getResultList().stream().findFirst().orElse(null);
 		return patente;
 	}
+	
+	
 	
 }

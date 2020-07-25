@@ -6,15 +6,12 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import com.comunenapoli.progetto.model.Auto;
 import com.comunenapoli.progetto.model.CalendarioChiusure;
-import com.comunenapoli.progetto.model.Noleggio;
-import com.comunenapoli.progetto.model.Patente;
 
 public class CalendarioChiusureDao implements DaoInterface<CalendarioChiusure> {
-	
+
 	private EntityManager manager = null;
-	
+
 	public CalendarioChiusureDao()
 	{
 		this(null);
@@ -40,40 +37,42 @@ public class CalendarioChiusureDao implements DaoInterface<CalendarioChiusure> {
 
 	@Override
 	public List<CalendarioChiusure> retrieve() {
-		List<CalendarioChiusure> listaCalendari = manager.createQuery("from CalendarioChiusure",CalendarioChiusure.class).getResultList();
-		return listaCalendari;
+		TypedQuery<CalendarioChiusure> query = manager.createQuery("from CalendarioChiusure",CalendarioChiusure.class);
+		List<CalendarioChiusure> listaChiusure = query.getResultList();
+		return listaChiusure;
 	}
 
 	@Override
-	public void update(CalendarioChiusure calendarioChiusure) {
-		manager.persist(calendarioChiusure);
+	public void update(CalendarioChiusure calendario) {
+		manager.persist(calendario);
 	}
 
 	@Override
-	public void delete(CalendarioChiusure calendarioChiusure) {
-		manager.remove(calendarioChiusure);
+	public void delete(CalendarioChiusure calendario) {
+		manager.remove(calendario);
 	}
-	
 	
 	public CalendarioChiusure findByDataInizioDataFine(Date dataInizio, Date dataFine) {
-		return manager.createQuery("select c from CalendarioChiusure c where c.dataInizioChiusura between :x and :y ",CalendarioChiusure.class).
-				setParameter("x",dataInizio).setParameter("y", dataFine).getResultList().stream().findFirst().orElse(null);
-		
-		
+		TypedQuery<CalendarioChiusure> query;
+		query = manager.createQuery("select c from CalendarioChiusure c where c.dataInizio between :x and :y",CalendarioChiusure.class);
+		query = query.setParameter("x",dataInizio).setParameter("y", dataFine);
+		CalendarioChiusure chiusura = query.getResultList().stream().findFirst().orElse(null);
+		System.out.println("chiusura: ");
+		System.out.println(chiusura);
+		return chiusura;
+	}
+	
+	
+	//ritorna true se è aperto e quindi si può aggiungere il noleggio
+	public boolean findByDataInizioUtente(Date dataInizio) {
+		TypedQuery<CalendarioChiusure> query;
+		query = manager.createQuery("select c from CalendarioChiusure c where c.dataInizio b :x or c.dataFine > :y",CalendarioChiusure.class);
+		query = query.setParameter("x",dataInizio).setParameter("y", dataInizio);
+		CalendarioChiusure calendarioChiusure = query.getResultList().stream().findFirst().orElse(null);
+		boolean isAperto = calendarioChiusure==null;
+		return isAperto;
 	}
 	
 	
 	
-	public boolean findByDataInizioUtente(Date dataInizioUtente) {
-		CalendarioChiusure calendarioChiusure = manager.createQuery("select c from CalendarioChiusure c where c.dataInizioChiusura < :x or c.dataFineChiusura > :x ",CalendarioChiusure.class).
-				setParameter("x",dataInizioUtente).getResultList().stream().findFirst().orElse(null);
-		
-		if (calendarioChiusure != null) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-
 }

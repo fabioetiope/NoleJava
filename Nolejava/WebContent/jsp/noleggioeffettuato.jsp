@@ -1,18 +1,11 @@
-<%@page import="com.comunenapoli.progetto.utils.Costanti"%>
+<%@page import="java.sql.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<% 	
-	String numeroPatente = (String)request.getAttribute(Costanti.NUMERO_PATENTE);	
-	String operazionePatente = "Crea patente";
-	boolean checkPatente = numeroPatente!="" || !numeroPatente.isEmpty();
-	if (checkPatente) {
-		operazionePatente = "Aggiorna patente";
-	}
-%>    
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>NoleJava - Patente</title>
+    <title>NoleJava - Noleggio effettuato</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -37,6 +30,15 @@
     <link rel="stylesheet" href="/Nolejava/css/flaticon.css">
     <link rel="stylesheet" href="/Nolejava/css/icomoon.css">
     <link rel="stylesheet" href="/Nolejava/css/style.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+
+
 </head>
 
 <body>
@@ -72,51 +74,29 @@
             <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
                 <div class="col-md-9 ftco-animate pb-5">
                     <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i
-                                    class="ion-ios-arrow-forward"></i></a></span> <span>Patente <i
+                                    class="ion-ios-arrow-forward"></i></a></span> <span>Profilo<i
                                 class="ion-ios-arrow-forward"></i></span></p>
-                    <h1 class="mb-3 bread">Patente</h1>
+                    <h1 class="mb-3 bread">Le tue prenotazioni</h1>
                 </div>
             </div>
         </div>
     </section>
     <!-- FINE intestazione -->
 
-    <!-- INIZIO form -->
-    <section class="ftco-section contact-section">
-        <div class="container">
+    <!-- INIZIO success -->
+    <section class="ftco-section contact-section" id="noleggioavvenuto">
 
-            <div class="row block-9 justify-content-center mb-5">
-                <div class="col-md-8 mb-md-5">
-                    <h2 class="text-center"><%=operazionePatente%></h2>
-                    <form action="/Nolejava/patenteServlet" method="POST" class="bg-light p-5 contact-form">
-                            <div class="form-group">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1">Numero Patente</span>
-                                    </div>
-                                    <input type="text" class="form-control" value="<%=numeroPatente%>" name="numeropatente" aria-label="numeroPatente" aria-describedby="basic-addon1" 
-								    <% if (checkPatente) { %> readonly <% } 
-								    else { %> required <% } %>  >
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1">Data di scadenza</span>
-                                    </div>
-                                    <input type="date" class="form-control" name="datascadenza" aria-label="Data di scadenza"
-                                        aria-describedby="basic-addon1" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="<%=operazionePatente%>" class="form-control btn btn-primary">
-                            </div>
-                    </form>
-                </div>
+        <div class="row block-9 justify-content-center mb-5">
+            <div class="col-md-8 mb-md-5">
+                <div class="bg-light p-5 contact-form justify-content-center text-center">
+                        <span><i class="fa fa-check-circle-o fa-5x text-success"></i></span>
+                        <h2 class="mt-3">Noleggio avvenuto con successo</h2>
+                </div>    
+
             </div>
-        </div>
+        </div>    
     </section>
-    <!-- FINE form -->
+    <!-- FINE success -->
 
 
     <!-- INIZIO footer-->
@@ -213,6 +193,7 @@
     <script src="/Nolejava/js/google-map.js"></script>
     <script src="/Nolejava/js/main.js"></script>
     <script src="/Nolejava/js/script.js"></script>
+    <script src="/Nolejava/js/prova.js"></script>
     <script src="https://use.fontawesome.com/b9bdbd120a.js"></script>
     <script src="/Nolejava/js/bootstrap-datetimepicker.min.js"></script>
 

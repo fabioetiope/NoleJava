@@ -11,20 +11,20 @@ import com.comunenapoli.progetto.utils.DataUtils;
 
 
 public class BusinessLogicPatente {
-	
+
 	private PatenteDao patenteDao = null;
-	private EntityManager entityManager = null;
-	
-	public BusinessLogicPatente(PatenteDao patenteDao, EntityManager entityManager) {
-		super();
-		this.patenteDao = patenteDao;
-		this.entityManager = entityManager;
+	private EntityManager em = null;
+
+	public BusinessLogicPatente (EntityManager em ,PatenteDao patenteDao) {
+		setEm(em);
+		setPatenteDao(patenteDao);
 	}
-	
+
 
 	public PatenteDao getPatenteDao() {
 		return patenteDao;
 	}
+
 
 
 	public void setPatenteDao(PatenteDao patenteDao) {
@@ -32,78 +32,72 @@ public class BusinessLogicPatente {
 	}
 
 
-	public EntityManager getEntityManager() {
-		return entityManager;
+
+	public EntityManager getEm() {
+		return em;
 	}
 
 
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
+	public void setEm(EntityManager em) {
+		this.em = em;
 	}
-
 
 	public void create(Patente patente) {
-		entityManager.getTransaction().begin();
+		em.getTransaction().begin();
 		try {
 			patenteDao.create(patente);
-			entityManager.getTransaction().commit();
+			em.getTransaction().commit();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			entityManager.getTransaction().rollback();
+			em.getTransaction().rollback();
 		}
 	}
-	
+
 	public void update(Patente patente) {
-		entityManager.getTransaction().begin();
+		em.getTransaction().begin();
 		try {
 			patenteDao.update(patente);
-			entityManager.getTransaction().commit();
+			em.getTransaction().commit();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			entityManager.getTransaction().rollback();
+			em.getTransaction().rollback();
 		}
 	}
-	
-	//creiamo patente solo nel caso in cui l'utente non ne ha una associata e solo nel caso in cui non esiste già una con lo stesso numero
+
+
+	public void delete(Integer idPatente) {
+		//TODO 
+	}
+
+
+	//crea la patente solo se l'utente non ne ha già una associata, e se nessun altro utente ha lo stesso numeroPatente associato
 	public boolean creaPatente(Patente patente) {
-		
-		if(patenteDao.findPatenteByUtente(patente.getUtente()) == null && patenteDao.findPatenteByNumeroPatente(patente.getNumeroPatente()) == null) {
-			create(patente);
-			return true;
+		Utente utente = patente.getUtente();
+		Integer idUtente = utente.getIdUtente();
+		Patente patenteUtente = getPatenteByUtente(utente);
+		if (patenteUtente==null) {
+			String numeroPatente = patente.getNumeroPatente();
+			patenteUtente = patenteDao.findPatenteByNumeroPatente(numeroPatente);
+			if (patenteUtente==null) {
+				create(patente);
+				return true;
+			}
 		}
-		
 		return false;
-		
 	}
-	
+
+
 	public Patente getPatenteByUtente(Utente utente) {
-		return patenteDao.findPatenteByUtente(utente);
+		Patente patente = patenteDao.findPatenteByUtente(utente);
+		return patente;
 	}
-	
+
 	public boolean isPatenteValid(Date dataScadenza) throws Exception {
 		boolean isDataValida = DataUtils.dataScadenza(dataScadenza);
 		return isDataValida;
 	}
-	
-	public void operazioniPatente (String dataScadenzaString, String numeroPatente, Utente utente) throws ParseException {
-		
-		Patente patente = patenteDao.findPatenteByNumeroPatente(numeroPatente);
-		boolean isNuovaPatente = patente == null;	
-		Date dataScadenza = DataUtils.convertiDataFromString(dataScadenzaString);
-			
-		if (isNuovaPatente) {
-			patente = new Patente(numeroPatente, dataScadenza, utente);
-			create(patente);
-		}else {
-			patente.setDataScadenza(dataScadenza);
-			update(patente);
-		}
-		
-		
-	}
-
 
 	public Integer responsoPatente(Utente utente) throws Exception {
 		Patente patente = patenteDao.findPatenteByUtente(utente);
@@ -119,9 +113,30 @@ public class BusinessLogicPatente {
 			}else {
 				return 0;
 			}
-			
+
+		}
+	}
+
+	public void operazionePatente(Utente utente, String dataScadenzaString, String numeroPatente) throws ParseException {
+		Patente patente = patenteDao.findPatenteByNumeroPatente(numeroPatente);
+		boolean isNuovaPatente = patente == null;
+		Date dataScadenza = DataUtils.convertiDataFromString(dataScadenzaString);
+		if (isNuovaPatente) {
+			patente = new Patente(numeroPatente, dataScadenza, utente);
+			create(patente);
+		}
+		else {
+			patente.setDataScadenza(dataScadenza);
+			update(patente);
 		}
 	}
 	
+	public void deleteByUtente(Utente utente) {
+		Patente patente = patenteDao.findPatenteByUtente(utente);
+		patenteDao.delete(patente);	
+	}
+
+
+
 
 }

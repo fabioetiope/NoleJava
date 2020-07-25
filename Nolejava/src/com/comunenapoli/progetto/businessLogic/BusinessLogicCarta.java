@@ -6,105 +6,97 @@ import java.text.ParseException;
 import javax.persistence.EntityManager;
 
 import com.comunenapoli.progetto.model.CartaDiCredito;
-import com.comunenapoli.progetto.model.Patente;
 import com.comunenapoli.progetto.model.Utente;
 import com.comunenapoli.progetto.utils.DataUtils;
 
+
 public class BusinessLogicCarta {
-	
-	private CartaDiCreditoDao cartaDiCreditoDao = null;
-	private EntityManager entityManager = null;
-	
-	public BusinessLogicCarta(CartaDiCreditoDao cartaDiCreditoDao, EntityManager entityManager) {
-		super();
-		this.cartaDiCreditoDao = cartaDiCreditoDao;
-		this.entityManager = entityManager;
-	}
-	
 
-	public CartaDiCreditoDao getCartaDiCreditoDao() {
-		return cartaDiCreditoDao;
+	private CartaDiCreditoDao cartaDao = null;
+	private EntityManager em = null;
+
+	public BusinessLogicCarta(EntityManager em, CartaDiCreditoDao cartaDao) {
+		this.cartaDao = cartaDao;
+		this.em = em;
 	}
 
 
-	public void setCartaDiCreditoDao(CartaDiCreditoDao cartaDiCreditoDao) {
-		this.cartaDiCreditoDao = cartaDiCreditoDao;
+	public CartaDiCreditoDao getCartaDao() {
+		return cartaDao;
 	}
 
 
-	public EntityManager getEntityManager() {
-		return entityManager;
+
+	public void setCartaDao(CartaDiCreditoDao cartaDao) {
+		this.cartaDao = cartaDao;
 	}
 
 
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
+
+	public EntityManager getEm() {
+		return em;
 	}
 
 
-	public void create(CartaDiCredito cartaDiCredito) {
-		entityManager.getTransaction().begin();
+	public void setEm(EntityManager em) {
+		this.em = em;
+	}
+
+	public void create(CartaDiCredito carta) {
+		em.getTransaction().begin();
 		try {
-			cartaDiCreditoDao.create(cartaDiCredito);
-			entityManager.getTransaction().commit();
+			cartaDao.create(carta);
+			em.getTransaction().commit();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			entityManager.getTransaction().rollback();
+			em.getTransaction().rollback();
 		}
 	}
-	
-	public void update(CartaDiCredito cartaDiCredito) {
-		entityManager.getTransaction().begin();
+
+	public void update(CartaDiCredito carta) {
+		em.getTransaction().begin();
 		try {
-			cartaDiCreditoDao.update(cartaDiCredito);
-			entityManager.getTransaction().commit();
+			cartaDao.update(carta);
+			em.getTransaction().commit();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			entityManager.getTransaction().rollback();
+			em.getTransaction().rollback();
 		}
 	}
-	
-	//creiamo patente solo nel caso in cui l'utente non ne ha una associata e solo nel caso in cui non esiste già una con lo stesso numero
+
+
+	public void delete(Integer idPatente) {
+		//TODO 
+	}
+
+
+	//crea la carta solo se l'utente non ne ha già una associata, e se nessun altro utente ha lo stesso numeroCarta associato
 	public boolean creaCarta(CartaDiCredito carta) {
-		
-		if(cartaDiCreditoDao.findCartaByUtente(carta.getUtente()) == null && cartaDiCreditoDao.findCartaByNumeroCarta(carta.getNumeroCarta()) == null) {
-			create(carta);
-			return true;
+		Utente utente = carta.getUtente();
+		CartaDiCredito cartaUtente = getCartaByUtente(utente);
+		if (cartaUtente==null) {
+			String numeroPatente = carta.getNumeroCarta();
+			cartaUtente = cartaDao.findCartaByNumeroCarta(numeroPatente);
+			if (cartaUtente==null) {
+				create(carta);
+				return true;
+			}
 		}
-		
 		return false;
-		
 	}
-	
+
+
 	public CartaDiCredito getCartaByUtente(Utente utente) {
-		return cartaDiCreditoDao.findCartaByUtente(utente);
+		CartaDiCredito carta = cartaDao.findCartaByIdUtente(utente);
+		return carta;
 	}
-	
+
 	public boolean isCartaValid(Date dataScadenza) throws Exception {
 		boolean isDataValida = DataUtils.dataScadenza(dataScadenza);
 		return isDataValida;
 	}
-	
-	
-	public void operazioniCarta (Integer idCarta, String dataDiScadenzaString, String numeroCarta, Integer cvv, Utente utente) throws ParseException {
-		CartaDiCredito cartaDiCredito = cartaDiCreditoDao.findCartaByIdCarta(idCarta);
-		
-		boolean isNuovaCarta = cartaDiCredito == null;
-		Date dataDiScadenza = DataUtils.convertiDataFromString(dataDiScadenzaString);
-		if (isNuovaCarta) {
-			cartaDiCredito = new CartaDiCredito(numeroCarta, cvv, dataDiScadenza, utente);
-			create(cartaDiCredito);
-		}else {
-			cartaDiCredito.setDataDiScadenza(dataDiScadenza);
-			cartaDiCredito.setCvv(cvv);
-			cartaDiCredito.setNumeroCarta(numeroCarta);
-			update(cartaDiCredito);
-		}
-		
-	}
-
 
 	public Integer responsoCarta(Utente utente) throws Exception {
 		CartaDiCredito carta = getCartaByUtente(utente);
@@ -121,9 +113,27 @@ public class BusinessLogicCarta {
 				return 0;
 			}
 		}
-	
+	}
+
+	public void operazioniCarta (Integer idCarta, Date dataDiScadenza, String numeroCarta, Integer cvv, Utente utente) throws ParseException {
+		CartaDiCredito cartaDiCredito = getCartaByUtente(utente);
+		boolean isNuovaCarta = cartaDiCredito == null;
+		if (isNuovaCarta) {
+			cartaDiCredito = new CartaDiCredito(numeroCarta, cvv, dataDiScadenza, utente);
+			create(cartaDiCredito);
+		}else {
+			cartaDiCredito.setDataDiScadenza(dataDiScadenza);
+			cartaDiCredito.setCvv(cvv);
+			cartaDiCredito.setNumeroCarta(numeroCarta);
+			update(cartaDiCredito);
+		}
+
 	}
 	
-		
+	
+	public void deleteByUtente(Utente utente) {
+		CartaDiCredito carta = cartaDao.findCartaByIdUtente(utente);
+		cartaDao.delete(carta);
+	}
 
 }

@@ -9,35 +9,29 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.comunenapoli.progetto.utils.Costanti;
+
 @Entity
 public class CalendarioChiusure {
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idCalendario = null;
 	
-	Date dataInizioChiusura = null;
-	Date dataFineChiusura = null;
+	private Date dataInizio = null;
+	private Date dataFine = null;
 	
 	@ManyToOne
 	@JoinColumn(name="ruoloCalendario")
 	private Ruolo ruoloCalendario = null;
-	
 
 	public CalendarioChiusure() {
-		this(null,null,null);
+		this(null,null);
 	}
 	
-	public CalendarioChiusure(Date dataInizioChiusura, Date dataFineChiusura) {
-		this.dataInizioChiusura = dataInizioChiusura;
-		this.dataFineChiusura = dataFineChiusura;
-	}
-
-	public CalendarioChiusure(Date dataInizioChiusura, Date dataFineChiusura, Ruolo ruoloUtente) {
-		super();
-		this.dataInizioChiusura = dataInizioChiusura;
-		this.dataFineChiusura = dataFineChiusura;
-		this.ruoloCalendario = ruoloUtente;
+	public CalendarioChiusure(Date dataInizio, Date dataFine) {
+		this.dataInizio = dataInizio;
+		this.dataFine = dataFine;
+		this.ruoloCalendario = new Ruolo(Costanti.ID_RUOLO_ADMIN,Costanti.RUOLO_ADMIN);
 	}
 
 	public Integer getIdCalendario() {
@@ -48,36 +42,36 @@ public class CalendarioChiusure {
 		this.idCalendario = idCalendario;
 	}
 
-	public Date getDataInizioChiusura() {
-		return dataInizioChiusura;
+	public Date getDataInizio() {
+		return dataInizio;
 	}
 
-	public void setDataInizioChiusura(Date dataInizioChiusura) {
-		this.dataInizioChiusura = dataInizioChiusura;
+	public void setDataInizio(Date dataInizio) {
+		this.dataInizio = dataInizio;
 	}
 
-	public Date getDataFineChiusura() {
-		return dataFineChiusura;
+	public Date getDataFine() {
+		return dataFine;
 	}
 
-	public void setDataFineChiusura(Date dataFineChiusura) {
-		this.dataFineChiusura = dataFineChiusura;
+	public void setDataFine(Date dataFine) {
+		this.dataFine = dataFine;
 	}
 
-	public Ruolo getRuoloCalendario() {
+	public Ruolo getRuoloUtente() {
 		return ruoloCalendario;
 	}
 
-	public void setRuoloCalendario(Ruolo ruoloCalendario) {
-		this.ruoloCalendario = ruoloCalendario;
+	public void setRuoloUtente(Ruolo ruoloUtente) {
+		this.ruoloCalendario = ruoloUtente;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((dataFineChiusura == null) ? 0 : dataFineChiusura.hashCode());
-		result = prime * result + ((dataInizioChiusura == null) ? 0 : dataInizioChiusura.hashCode());
+		result = prime * result + ((dataFine == null) ? 0 : dataFine.hashCode());
+		result = prime * result + ((dataInizio == null) ? 0 : dataInizio.hashCode());
 		result = prime * result + ((idCalendario == null) ? 0 : idCalendario.hashCode());
 		result = prime * result + ((ruoloCalendario == null) ? 0 : ruoloCalendario.hashCode());
 		return result;
@@ -92,15 +86,15 @@ public class CalendarioChiusure {
 		if (getClass() != obj.getClass())
 			return false;
 		CalendarioChiusure other = (CalendarioChiusure) obj;
-		if (dataFineChiusura == null) {
-			if (other.dataFineChiusura != null)
+		if (dataFine == null) {
+			if (other.dataFine != null)
 				return false;
-		} else if (!dataFineChiusura.equals(other.dataFineChiusura))
+		} else if (!dataFine.equals(other.dataFine))
 			return false;
-		if (dataInizioChiusura == null) {
-			if (other.dataInizioChiusura != null)
+		if (dataInizio == null) {
+			if (other.dataInizio != null)
 				return false;
-		} else if (!dataInizioChiusura.equals(other.dataInizioChiusura))
+		} else if (!dataInizio.equals(other.dataInizio))
 			return false;
 		if (idCalendario == null) {
 			if (other.idCalendario != null)
@@ -114,15 +108,5 @@ public class CalendarioChiusure {
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "CalendarioChiusure [idCalendario=" + idCalendario + ", dataInizioChiusura=" + dataInizioChiusura
-				+ ", dataFineChiusura=" + dataFineChiusura + ", ruoloCalendario=" + ruoloCalendario + "]";
-	}
-
-
 	
-	
-
 }

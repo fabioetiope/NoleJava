@@ -22,12 +22,12 @@ public class Patente {
 	
 	@OneToOne
 	private Utente utente = null;
-	
+
 	public Patente() {
-		this(null, null, null);
+		this(null,null,null);
 	}
 
-	public Patente(String numeroPatente, Date dataScadenza, Utente utente) {
+	public Patente(String numeroPatente, Date dataScadenza,  Utente utente) {
 		this.numeroPatente = numeroPatente;
 		this.dataScadenza = dataScadenza;
 		this.utente = utente;
@@ -49,7 +49,6 @@ public class Patente {
 		this.numeroPatente = numeroPatente;
 	}
 
-
 	public Date getDataScadenza() {
 		return dataScadenza;
 	}
@@ -58,7 +57,6 @@ public class Patente {
 		this.dataScadenza = dataScadenza;
 	}
 
-
 	public Utente getUtente() {
 		return utente;
 	}
@@ -66,60 +64,4 @@ public class Patente {
 	public void setUtente(Utente utente) {
 		this.utente = utente;
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((dataScadenza == null) ? 0 : dataScadenza.hashCode());
-		result = prime * result + ((idPatente == null) ? 0 : idPatente.hashCode());
-		result = prime * result + ((numeroPatente == null) ? 0 : numeroPatente.hashCode());
-		result = prime * result + ((utente == null) ? 0 : utente.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Patente other = (Patente) obj;
-		if (dataScadenza == null) {
-			if (other.dataScadenza != null)
-				return false;
-		} else if (!dataScadenza.equals(other.dataScadenza))
-			return false;
-		if (idPatente == null) {
-			if (other.idPatente != null)
-				return false;
-		} else if (!idPatente.equals(other.idPatente))
-			return false;
-		if (numeroPatente == null) {
-			if (other.numeroPatente != null)
-				return false;
-		} else if (!numeroPatente.equals(other.numeroPatente))
-			return false;
-		if (utente == null) {
-			if (other.utente != null)
-				return false;
-		} else if (!utente.equals(other.utente))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Patente [idPatente=" + idPatente + ", numeroPatente=" + numeroPatente + ", dataScadenza=" + dataScadenza
-				+ ", utente=" + utente + "]";
-	}
-
-	
-	
-	
-	
-	
-
 }
