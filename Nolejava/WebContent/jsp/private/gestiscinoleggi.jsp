@@ -5,6 +5,14 @@
 <%@page import="com.comunenapoli.progetto.utils.Costanti"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%Utente utente= (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
+
+if (utente.getRuolo().getId() == 1){
+
+%>   
+    
+    
 <!DOCTYPE html>
 <html>
 
@@ -37,7 +45,7 @@
         
         <ul class="list-unstyled components mb-5">
           <li>
-            <a href="/Nolejava/jsp/private//dashboard.jsp">Dashboard</a>
+            <a href="/Nolejava/notificheDashboard">Dashboard</a>
           </li>
           <li>
             <a href="/Nolejava">Homepage</a>
@@ -94,7 +102,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="nav navbar-nav">
                 <li class="nav-item active">
-                  <a class="nav-link" href="/Nolejava/jsp/private/dashboard.jsp">Dashboard</a>
+                  <a class="nav-link" href="/Nolejava/notificheDashboard">Dashboard</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/Nolejava">Homepage</a>
@@ -145,38 +153,38 @@
 
  <form action="/Nolejava/gestisciNoleggiServlet" method="post">
         <div class="row mt-4">
-          <div class=".col-lg-2 col-xl-2 mt-2">
+          <div class="col-lg-2 col-xl-2 mt-2">
             <label>Ricerca per campo:</label>
           </div>
-          <div class=".col-lg-2 col-xl-2 mt-2">
+          <div class="col-md-3 col-lg-3 col-xl-3 mt-2">
             <input class="form-control" list="ricerca" name="ricerca">
             <datalist id="ricerca" name="ricerca">
               <option value="Username utente"></option>
               <option value="Marca auto"></option>
             </datalist>
           </div>
-          <div class=".col-lg-2 col-xl-2 mt-2">
+          <div class="col-md-3 col-lg-3 col-xl-3 mt-2">
             <input class="form-control" type="text" name="filtro" value="" required>
           </div>
-          <div class=".col-lg-2 col-xl-2 mt-2">
+          <div class="col-md-3 col-lg-3 col-xl-3 col-md-4 mt-2">
             <input class="form-control btn btn-primary" type="submit" name="action" value="cerca per campo">
           </div>
 
         </div>
       </form>
 
-      <form style="margin-top: 2%; margin-bottom: 5%;" action="/Nolejava/gestisciNoleggiServlet" method="post"></form>
+      <form style="margin-top: 2%; margin-bottom: 5%;" action="/Nolejava/gestisciNoleggiServlet" method="post">
       <div class="row mt-4 mb-5">
         <div class=".col-lg-2 col-xl-2 mt-2">
           <label>Ricerca per date:</label>
         </div>
-        <div class=".col-lg-2 col-xl-2 mt-2">
+        <div class="col-md-3 col-lg-3 col-xl-3 mt-2">
           <input class="form-control" type="date" placeholder="Data inizio noleggio" name="datainizio" required>
         </div>
-        <div class=".col-lg-2 col-xl-2 mt-2">
+        <div class="col-md-3 col-lg-3 col-xl-3 mt-2">
           <input class="form-control" type="date" placeholder="Data fine noleggio" name="datafine" required>
         </div>
-        <div class=".col-lg-2 col-xl-2 mt-2">
+        <div class="col-md-3 col-lg-3 col-xl-3 mt-2">
           <input class="form-control btn btn-primary" type="submit" name="action"
             value="cerca per date">
         </div>
@@ -187,7 +195,6 @@
 
 
 <% 
-	Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
 	List<Noleggio> listaNoleggio = (List<Noleggio>) request.getSession().getAttribute(Costanti.LISTA_COMPLETA_NOLEGGI);
 	if (listaNoleggio!=null && !listaNoleggio.isEmpty()) {
 %>
@@ -285,3 +292,7 @@
 	
 </body>
 </html>
+
+<%
+}
+%>

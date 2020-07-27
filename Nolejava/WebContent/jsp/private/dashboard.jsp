@@ -9,8 +9,17 @@ Integer numeroUtentiNonVerificati = (Integer) request.getAttribute(Costanti.NUME
 Integer numeroNoleggi  = (Integer) request.getAttribute(Costanti.NUMERO_NOLEGGI);
 Integer numeroUtenti  = (Integer) request.getAttribute(Costanti.NUMERO_UTENTI);
 Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
-%>
 
+String dashboard = "DASHBOARD ";
+Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
+if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN){
+	dashboard += "ADMIN";
+}else{
+	dashboard += "STAFF";
+}
+
+
+%>
 
 <html>
 
@@ -44,7 +53,7 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 			<img class="logo-dashboard" src="/Nolejava/images/nolejava-vector.svg">
 
 			<ul class="list-unstyled components mb-5">
-				<li class="active"><a href="#">Dashboard</a></li>
+				<li class="active"><a href="/Nolejava/notificheDashboard">Dashboard</a></li>
 				<li><a href="/Nolejava">Homepage</a></li>
 				<li>
 					<form action="/Nolejava/logoutServlet" method="post">
@@ -75,7 +84,7 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 
 			<div class="container-fluid ">
 				<p id="paragrafo-dashboard" style="margin-right: auto !important;">
-					DASHBOARD ADMIN</p>
+					<%=dashboard%></p>
 
 
 				<!-- INIZIO NAVBAR-MOBILE -->
@@ -83,7 +92,7 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 
 
 					<p style="margin-left: auto !important; margin-right: 0 !important">
-						DASHBOARD ADMIN</p>
+						<%=dashboard%></p>
 
 
 
@@ -101,7 +110,7 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="nav navbar-nav">
-							<li class="nav-item active"><a class="nav-link" href="#">Dashboard</a>
+							<li class="nav-item active"><a class="nav-link" href="/Nolejava/notificheDashboard">Dashboard</a>
 							</li>
 							<li class="nav-item"><a class="nav-link"
 								href="/Nolejava">Homepage</a></li>
@@ -127,7 +136,6 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 		</nav>
 		<!-- FINE NAVBAR -->
 		<%
-		Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
 		Integer ruoloUtente = utente.getRuolo().getId();
 	%>
 		<form action="/Nolejava/dashboardServlet" method="post">
@@ -139,7 +147,7 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 					<div class="col-md-4 col-xl-4">
 						<div class="card order-card"
 							style="background-color: rgb(36, 37, 38); height: 300px;">
-							<div class="card bg-c-yellow order-card fixed-top"
+							<div class="notifica card bg-c-yellow order-card fixed-top"
 								style="position: absolute; margin: 7%;">
 								<div class="card-block">
 									<h6 class="m-b-20">Utenti da verificare</h6>
@@ -159,7 +167,7 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 					<div class="col-md-4 col-xl-4 mt-5 mt-md-0 mt-xl-0">
 						<div class="card order-card"
 							style="background-color: rgb(36, 37, 38); height: 300px;">
-							<div class="card bg-c-yellow order-card fixed-top"
+							<div class="notifica card bg-c-yellow order-card fixed-top"
 								style="position: absolute; margin: 7%;">
 								<div class="card-block">
 									<h6 class="m-b-20">Numero totale noleggi</h6>
@@ -179,7 +187,7 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 					<div class="col-md-4 col-xl-4 mt-5 mt-md-0 mt-xl-0">
 						<div class="card order-card"
 							style="background-color: rgb(36, 37, 38); height: 300px;">
-							<div class="card bg-c-yellow order-card fixed-top"
+							<div class="notifica card bg-c-yellow order-card fixed-top"
 								style="position: absolute; margin: 7%;">
 								<div class="card-block">
 									<h6 class="m-b-20">Calendario</h6>
@@ -187,9 +195,8 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 										<i class="far fa-calendar-alt f-left"></i><span> <script>var today = new Date();
                           var dd = String(today.getDate()).padStart(2, '0');
                           var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                          var yyyy = today.getFullYear();
 
-                          today = dd + '/' + mm + '/' + yyyy;
+                          today = dd + '/' + mm ;
                           document.write(today);</script></span>
 									</h3>
 								</div>
@@ -208,7 +215,7 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 					<div class="col-md-4 col-xl-4 col-xl-offset-2 col-md-offset-2 mt-5">
 						<div class="card order-card"
 							style="background-color: rgb(36, 37, 38); height: 300px;">
-							<div class="card bg-c-yellow order-card fixed-top"
+							<div class="notifica card bg-c-yellow order-card fixed-top"
 								style="position: absolute; margin: 7%;">
 								<div class="card-block">
 									<h6 class="m-b-20">Numero utenti registrati</h6>
@@ -225,10 +232,10 @@ Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
 						</div>
 					</div>
 
-					<div class="col-md-4 col-xl-4 col-xl-offset-2 col-md-offset-2 mt-5 mb-5 mb-md-0 mb-xl-0">
+					<div class="col-md-4 col-xl-4 col-xl-offset-2 col-md-offset-2 mt-5 mb-5 mb-md-5 mb-xl-0">
 						<div class="card order-card"
 							style="background-color: rgb(36, 37, 38); height: 300px;">
-							<div class="card bg-c-yellow order-card fixed-top"
+							<div class="notifica card bg-c-yellow order-card fixed-top"
 								style="position: absolute; margin: 7%;">
 								<div class="card-block">
 									<h6 class="m-b-20">Numero totale auto</h6>

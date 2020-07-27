@@ -68,8 +68,15 @@ public class GestisciUtentiServlet extends HttpServlet {
 			isPromosso = businessLogicUtente.updateRuolo(utente, Costanti.ID_RUOLO_STAFF);
 		}
 		else if (checkEliminaUtente) {
-			businessLogicPatente.deleteByUtente(utente);
+			if (businessLogicPatente.getPatenteByUtente(utente) != null) {
+				businessLogicPatente.deleteByUtente(utente);
+			}
+			
+			if (businessLogicCarta.getCartaByUtente(utente) != null) {
 			businessLogicCarta.deleteByUtente(utente);
+				
+			}
+			
 			businessLogicUtente.delete(idUtente);
 			isRimosso = true;
 		}

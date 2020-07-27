@@ -245,8 +245,7 @@ public class BusinessLogicUtente {
 	}
 
 	public Utente getUtenteByEmail(String username) {
-		Utente utente = utenteDao.findUtenteByUsername(username);
-		return null;
+		return utenteDao.findUtenteByUsername(username);
 	}
 
 

@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import com.comunenapoli.progetto.model.CalendarioChiusure;
+import com.comunenapoli.progetto.model.Utente;
 
 public class CalendarioChiusureDao implements DaoInterface<CalendarioChiusure> {
 
@@ -73,6 +74,11 @@ public class CalendarioChiusureDao implements DaoInterface<CalendarioChiusure> {
 		return isAperto;
 	}
 	
+	public CalendarioChiusure findChiusuraByIdCalendario(Integer idCalendario) {
+		CalendarioChiusure calendarioChiusure = manager.createQuery("select c from CalendarioChiusure c where c.idCalendario = :x",CalendarioChiusure.class).
+				setParameter("x",idCalendario).getResultList().stream().findFirst().orElse(null);
+		return calendarioChiusure;
+	}
 	
 	
 }

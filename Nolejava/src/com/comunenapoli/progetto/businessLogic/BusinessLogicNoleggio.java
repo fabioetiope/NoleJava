@@ -305,5 +305,14 @@ public class BusinessLogicNoleggio {
 		List<CalendarioChiusure> chiusure = calendarioChiusureDao.retrieve();
 		return chiusure;
 	}
+	
+	public CalendarioChiusure getChiusuraByIdCalendario (Integer idCalendario) {
+		return calendarioChiusureDao.findChiusuraByIdCalendario(idCalendario);
+	}
+	
+	public List<Noleggio> getNoleggiByDataInizioDataFineByAdmin(Date dataInizio, Date dataFine) {
+		return noleggioDao.findNoleggiByDataInizioDataFineByAdmin(dataInizio, dataFine);
+	
+	}
 
 }

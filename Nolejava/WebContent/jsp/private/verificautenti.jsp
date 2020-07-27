@@ -3,6 +3,14 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%   
+Utente utente= (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
+
+if (utente.getRuolo().getId() == 1){    
+%>
+    
+    
 <!DOCTYPE html>
 <html>
 
@@ -34,7 +42,7 @@
         
         <ul class="list-unstyled components mb-5">
           <li>
-            <a href="/Nolejava/jsp/private/dashboard.jsp">Dashboard</a>
+            <a href="/Nolejava/notificheDashboard">Dashboard</a>
           </li>
           <li>
             <a href="/Nolejava">Homepage</a>
@@ -93,7 +101,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="nav navbar-nav">
                 <li class="nav-item active">
-                  <a class="nav-link" href="/Nolejava/jsp/private/dashboard.jsp">Dashboard</a>
+                  <a class="nav-link" href="/Nolejava/notificheDashboard">Dashboard</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/Nolejava">Homepage</a>
@@ -126,7 +134,6 @@
     <h3 style="color: #FFFFFFCC;">Verifica utenti</h3>
 
 <%
-	Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
 	Integer ruoloUtente = utente.getRuolo().getId();
 	List<Utente> utentiNonVerificati = (List<Utente>) request.getAttribute(Costanti.LISTA_UTENTI_NON_VERIFICATI);
 	if (utentiNonVerificati!=null && !utentiNonVerificati.isEmpty()){
@@ -201,11 +208,15 @@
 
   </div>
 
-  <script src="Nolejava/js/jquery.min.js"></script>
-  <script src="Nolejava/js/popper.js"></script>
-  <script src="Nolejava/js/bootstrap.min.js"></script>
-  <script src="Nolejava/js/main-dashboard.js"></script>
+  <script src="/Nolejava/js/jquery.min.js"></script>
+  <script src="/Nolejava/js/popper.js"></script>
+  <script src="/Nolejava/js/bootstrap.min.js"></script>
+  <script src="/Nolejava/js/main-dashboard.js"></script>
 
 
 </body>
 </html>
+
+<%
+}
+%>

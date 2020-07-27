@@ -3,6 +3,23 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+    
+<%
+String dashboard = "DASHBOARD ";
+Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
+if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN){
+	dashboard += "ADMIN";
+}else{
+	dashboard += "STAFF";
+}
+
+%> 
+    
+    
+    
+    
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,10 +35,11 @@
   <link rel="stylesheet" href="/Nolejava/css/style-dashboard.css">
 
   <link rel="stylesheet" href="/Nolejava/css/my-style-dashboard.css">
+    
 	
 </head>
 <body>
-	
+
 	 <div class="wrapper d-flex align-items-stretch">
 
     <!-- INIZIO sidebar -->
@@ -32,7 +50,7 @@
 
         <ul class="list-unstyled components mb-5">
           <li>
-            <a href="/Nolejava/jsp/private/dashboard.jsp">Dashboard</a>
+            <a href="/Nolejava/notificheDashboard">Dashboard</a>
           </li>
           <li>
             <a href="/Nolejava">Homepage</a>
@@ -67,14 +85,14 @@
       <nav id="navbar" style="min-height: 60px;" class="navbar navbar-expand-lg navbar-light sticky">
 
         <div class="container-fluid ">
-          <p id="paragrafo-dashboard" style="margin-right: auto !important;"> DASHBOARD ADMIN</p>
+          <p id="paragrafo-dashboard" style="margin-right: auto !important;"> <%=dashboard%></p>
 
 
           <!-- INIZIO NAVBAR-MOBILE -->
           <div id="navbar-mobile">
 
 
-            <p style="margin-left:auto !important; margin-right:0 !important"> DASHBOARD ADMIN</p>
+            <p style="margin-left:auto !important; margin-right:0 !important"> <%=dashboard%></p>
 
 
 
@@ -89,7 +107,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="nav navbar-nav">
                 <li class="nav-item active">
-                  <a class="nav-link" href="/Nolejava/jsp/private/dashboard.jsp">Dashboard</a>
+                  <a class="nav-link" href="/Nolejava/notificheDashboard">Dashboard</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/Nolejava">Homepage</a>
@@ -120,12 +138,12 @@
     <!------- QUI Tabella-------->
     
     <h3 style="color: #FFFFFFCC;">Gestisci utenti</h3>
-
-	
+    
+  	
 <%
-	Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
 	Integer ruoloUtente = utente.getRuolo().getId();
 	List<Utente> listaUtenti = (List<Utente>) request.getAttribute(Costanti.LISTA_UTENTI);
+
 
 	if (listaUtenti!=null && !listaUtenti.isEmpty()){
 %>
@@ -223,7 +241,7 @@
 
   </div>
 
-  <script src="/Nolejavajs/jquery.min.js"></script>
+  <script src="/Nolejava/js/jquery.min.js"></script>
   <script src="/Nolejava/js/popper.js"></script>
   <script src="/Nolejava/js/bootstrap.min.js"></script>
   <script src="/Nolejava/js/main-dashboard.js"></script>

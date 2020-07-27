@@ -9,17 +9,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.comunenapoli.progetto.businessLogic.BusinessLogicCarta;
+import com.comunenapoli.progetto.businessLogic.BusinessLogicNoleggio;
+import com.comunenapoli.progetto.businessLogic.BusinessLogicPatente;
 import com.comunenapoli.progetto.businessLogic.BusinessLogicUtente;
+import com.comunenapoli.progetto.model.CalendarioChiusure;
 import com.comunenapoli.progetto.model.Utente;
 import com.comunenapoli.progetto.utils.Costanti;
 
-/**
- * Servlet implementation class ModificaProfiloCliente
- */
-@WebServlet("/ModificaProfiloCliente")
-public class ModificaProfiloCliente extends HttpServlet {
 
+@WebServlet("/cancellaChiusura")
+public class CancellaChiusura extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+    
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
@@ -32,22 +34,23 @@ public class ModificaProfiloCliente extends HttpServlet {
 			throws ServletException, IOException {
 		response.setHeader("Last-modified", LocalDateTime.now().toString());
 		response.setHeader("Cache-control", "no-store");
-		String nome = request.getParameter("nome");
-		String cognome = request.getParameter("cognome");
-		String username = request.getParameter("email");
-		String password = request.getParameter("password");
+		BusinessLogicNoleggio businessLogicNoleggio = (BusinessLogicNoleggio) getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_NOLEGGIO);
 		
-		BusinessLogicUtente businessLogicUtente = (BusinessLogicUtente)getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_UTENTE);
+		String idCalendarioString = request.getParameter("idCalendario").toLowerCase();
 		
-		Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
 		
-		Integer effettuaModifica = businessLogicUtente.updateDatiPersonali(utente, nome, cognome, username ,password);
-		if (effettuaModifica == 0) {
-			//TODO popup non avvenuta
+		if (idCalendarioString != null && !idCalendarioString.isEmpty()) {
+			Integer idCalendario = Integer.valueOf(idCalendarioString);
+			
+			CalendarioChiusure calendarioChiusure = businessLogicNoleggio.getChiusuraByIdCalendario(idCalendario);
+			
+			businessLogicNoleggio.deleteCalendario(calendarioChiusure);
+			
+			getServletContext().getRequestDispatcher("/jsp/private/resultcancellazionecalendario.jsp").forward(request, response);
+			
+			
 		}
-		else {
-			//TODO mostrare numero campi aggiornati
-		}
+		
 	
 	}
 }

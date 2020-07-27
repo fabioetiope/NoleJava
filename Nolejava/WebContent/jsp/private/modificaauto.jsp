@@ -1,3 +1,4 @@
+<%@page import="com.comunenapoli.progetto.model.Utente"%>
 <%@page import="com.comunenapoli.progetto.model.Auto"%>
 <%@page import="com.comunenapoli.progetto.utils.Costanti"%>
 <%@page import="java.sql.Date"%>
@@ -17,8 +18,13 @@
 	Double cilindrata = auto.getCilindrata();
 	Integer numeroPosti = auto.getNumeroPosti();
 	Double prezzoPerGiorno = auto.getPrezzoPerGiorno();
+	
+	Utente utente= (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
+	if (utente.getRuolo().getId() == 1){
 
 %>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,7 +54,7 @@
         
         <ul class="list-unstyled components mb-5">
           <li>
-            <a href="/Nolejava/jsp/private/dashboard.jsp">Dashboard</a>
+            <a href="/Nolejava/notificheDashboard">Dashboard</a>
           </li>
           <li>
             <a href="/Nolejava">Homepage</a>
@@ -105,7 +111,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="nav navbar-nav">
                 <li class="nav-item active">
-                  <a class="nav-link" href="/Nolejava/jsp/private/dashboard.jsp">Dashboard</a>
+                  <a class="nav-link" href="/Nolejava/notificheDashboard">Dashboard</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/Nolejava/">Homepage</a>
@@ -241,3 +247,7 @@
 </body>
 
 </html>
+
+<%
+	}
+%>

@@ -104,3 +104,9 @@
 .logo-dashboard{
     margin-bottom: 150px;
 }
+
+@media(min-width: 768px){
+	.notifica {
+	height: 146px;
+	}
+}

@@ -57,7 +57,6 @@ public class HomepageServlet extends HttpServlet {
 		}
 		
 			
-			System.out.println("Lista auto " + request.getSession().getAttribute(Costanti.LISTA_COMPLETA_AUTO));
 			RequestDispatcher requestDispatcher; 
 			requestDispatcher = request.getRequestDispatcher(html);
 			requestDispatcher.forward(request, response);
@@ -94,15 +93,6 @@ public class HomepageServlet extends HttpServlet {
 				numeroPosti = Integer.parseInt(numeroPostiString);
 			}
 			
-			System.out.println("dataInizio: " + dataInizio);
-			System.out.println("dataFine: " + dataFine);
-			System.out.println("marcaAuto: " + marcaAuto);
-			System.out.println("modelloAuto: " + modelloAuto);
-			System.out.println("cambioAuto: " + cambioAuto);
-			System.out.println("tipologiaCarburante: " + tipologiaCarburante);
-			System.out.println("numeroPosti: " + numeroPosti);
-			System.out.println("tipologiaAuto: " + tipologiaAuto);
-			
 			request.getSession().setAttribute(Costanti.TIPOLOGIA_AUTO_SCELTA, tipologiaAuto);
 			request.getSession().setAttribute(Costanti.MARCA_AUTO_SCELTA, marcaAuto);
 			request.getSession().setAttribute(Costanti.MODELLO_AUTO_SCELTA,modelloAuto);
@@ -116,6 +106,7 @@ public class HomepageServlet extends HttpServlet {
 
 			request.getSession().setAttribute(Costanti.LISTA_COMPLETA_AUTO, risultati);
 			//TODO reindirizza alla jsp passandogli la request e response
+			return risultati;
 
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

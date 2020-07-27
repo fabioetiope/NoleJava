@@ -1,23 +1,10 @@
-<%@page import="com.comunenapoli.progetto.model.CalendarioChiusure"%>
-<%@page import="java.sql.Date"%>
-<%@page import="com.comunenapoli.progetto.model.Noleggio"%>
-<%@page import="java.util.List"%>
-<%@page import="com.comunenapoli.progetto.model.Utente"%>
-<%@page import="com.comunenapoli.progetto.utils.Costanti"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-
-<%Utente utente= (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
-
-if (utente.getRuolo().getId() == 1){
-
-%>	
-	
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Calendario chiusure</title>
+<title>Result</title>
 
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -135,109 +122,14 @@ if (utente.getRuolo().getId() == 1){
       </nav>
       <!-- FINE NAVBAR -->
 
-	<!------- QUI Tabella-------->
-
-      <h3 style="color: #FFFFFFCC;">Calendario ferie</h3>
-      
-      <form action="/Nolejava/calendarioChiusureServlet" method="post">
-        <div class="row">
-          <div class="col-md-3 col-lg-3 col-xl-3 mt-2 d-flex flex-column">
-            <label for="datainizio">Data inizio</label>
-            <input class="form-control" type="date" placeholder="Data inizio chiusura" name="datainizio" required>
-
-          </div>
-          <div class="col-md-3 col-lg-3 col-xl-3 mt-2 d-flex flex-column">
-            <label for="dataFine">Data fine</label>
-            <input class="form-control" type="date" placeholder="Data fine chiusura" name="datafine" required>
-
-          </div>
-          <div class="col-md-3 col-lg-3 col-xl-3 mt-2 d-flex flex-column">
-            <input class=" form-control btn btn-primary mt-auto" type="submit" name="action" value="Inserisci chiusura">
-
-          </div>
-          
-		</div>
-      </form>
+	<center>
+        <h3 style="color: #FFFFFFCC;">Cancellazione date chiusure avvenuta correttamente</h3>
+        <br>
+        <a class="btn btn-primary" href="/Nolejava/notificheDashboard">Ritorna alla dashboard</a>
+    </center>
+    	
     
-
-
-
-<% 
-	List<CalendarioChiusure> listaChiusure = (List<CalendarioChiusure>) request.getSession().getAttribute(Costanti.LISTA_COMPLETA_CHIUSURE);
-	if (listaChiusure!=null && !listaChiusure.isEmpty()) {
-%>
-
-	<div class="table-responsive mt-5" style="border-radius: 0.25rem;">
-      <table class="table table-striped table-dark mr-5">
-        <thead>
-          <tr>
-            <th>Data Inizio Chiusura</th>
-            <th>Data Fine Chiusura</th>
-            <th>Operazioni</th>
-          </tr>
-        </thead>
-        <tbody>
-		
-<% 
-	for (int i=0; i<listaChiusure.size();i++){
-		CalendarioChiusure chiusuraCorrente = listaChiusure.get(i);
-		Date dataInizio = chiusuraCorrente.getDataInizio();
-		Date dataFine = chiusuraCorrente.getDataFine();
-		
-		Integer idCalendario = chiusuraCorrente.getIdCalendario();
-
-%>		
-		<tr>
-			<td><%=dataInizio%></td>
-			<td><%=dataFine%></td>
-			<td>		
-				<form action="/Nolejava/cancellaChiusura" method="POST">
-					<input type="hidden" name="idCalendario" value="<%=idCalendario%>">					
-				    <input type="submit" name="action" value="Cancella">
-				</form>					
-			</td>
-
-		</tr>
-		<%
-		}
-%>
-	 </tbody>
-	</table>
-	</div>
-	<%
-	}
-%>
+    
 	
-
-    <!------- FINE Tabella-------->
-
-    <footer id="footer" style="height: 50px; background-color: rgb(36, 37, 38);">
-
-      <div class="footer" style="text-align: center">
-        <p>
-          <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-          Copyright ©
-          <script>document.write(new Date().getFullYear());</script>
-          <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-          All rights reserved | NoleJava
-        </p>
-      </div>
-
-    </footer>
-
-  </div>
-
-
-  </div>
-
-  <script src="/Nolejava/js/jquery.min.js"></script>
-  <script src="/Nolejava/js/popper.js"></script>
-  <script src="/Nolejava/js/bootstrap.min.js"></script>
-  <script src="/Nolejava/js/main-dashboard.js"></script>
-
-</body>
-</html>
-
-<%
-}
-%>
+</div>
+</div>
