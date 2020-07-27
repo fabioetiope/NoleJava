@@ -1,3 +1,5 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.DateFormat"%>
 <%@page import="com.comunenapoli.progetto.model.CalendarioChiusure"%>
 <%@page import="java.sql.Date"%>
 <%@page import="com.comunenapoli.progetto.model.Noleggio"%>
@@ -181,11 +183,14 @@ if (utente.getRuolo().getId() == 1){
 <% 
 	for (int i=0; i<listaChiusure.size();i++){
 		CalendarioChiusure chiusuraCorrente = listaChiusure.get(i);
-		Date dataInizio = chiusuraCorrente.getDataInizio();
-		Date dataFine = chiusuraCorrente.getDataFine();
+		Date dataInizioChiusura = chiusuraCorrente.getDataInizio();
+		Date dataFineChiusura = chiusuraCorrente.getDataFine();
 		
-		Integer idCalendario = chiusuraCorrente.getIdCalendario();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		String dataInizio = df.format(dataInizioChiusura);
+		String dataFine = df.format(dataFineChiusura);
 
+		Integer idCalendario = chiusuraCorrente.getIdCalendario();
 %>		
 		<tr>
 			<td><%=dataInizio%></td>

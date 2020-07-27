@@ -1,3 +1,5 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.DateFormat"%>
 <%@page import="java.sql.Date"%>
 <%@page import="com.comunenapoli.progetto.model.Noleggio"%>
 <%@page import="java.util.List"%>
@@ -223,9 +225,13 @@ if (utente.getRuolo().getId() == 1){
 	for (int i=0; i<listaNoleggio.size();i++){
 		Noleggio noleggioCorrente = listaNoleggio.get(i);
 		Integer idNoleggio = noleggioCorrente.getIdNoleggio();
-		Date dataPrenotazione = noleggioCorrente.getDataPrenotazione();
-		Date dataInizio = noleggioCorrente.getDataInizio();
-		Date dataFine = noleggioCorrente.getDataFine();
+		Date dataPrenotazioneNoleggio = noleggioCorrente.getDataPrenotazione();
+		Date dataInizioNoleggio = noleggioCorrente.getDataInizio();
+		Date dataFineNoleggio = noleggioCorrente.getDataFine();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		String dataInizio = df.format(dataInizioNoleggio);
+		String dataFine = df.format(dataFineNoleggio);
+		String dataPrenotazione = df.format(dataPrenotazioneNoleggio);
 		String marca = noleggioCorrente.getAuto().getMarca();
 		String modello = noleggioCorrente.getAuto().getModello();
 		String username = noleggioCorrente.getUtente().getUsername();

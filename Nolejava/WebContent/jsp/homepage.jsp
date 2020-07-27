@@ -7,6 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
+  List<Auto> automobili =  (List<Auto>)request.getSession().getAttribute(Costanti.LISTA_COMPLETA_AUTO); 
   Date dataInizioNoleggio = (Date) request.getAttribute(Costanti.DATA_INIZIO_NOLEGGIO);
   Date dataFineNoleggio = (Date) request.getAttribute(Costanti.DATA_FINE_NOLEGGIO);
   String tipologiaAuto = (String) request.getAttribute(Costanti.TIPOLOGIA_AUTO_SCELTA);
@@ -20,7 +21,10 @@
   String link = "/Nolejava/jsp/";
   String link1 = link;
   String link2 = link;
-  
+  String voceListaAuto = "Scegli la tua auto";
+  if (automobili==null || automobili.size()==0){
+	  voceListaAuto = "Spiacenti, non ci sono auto corrispondenti alla tua ricerca";
+  }
   String operazione = "Dettagli";
   
   if (tipologiaAuto==null || tipologiaAuto.isEmpty()) {
@@ -37,15 +41,16 @@
       link2 += "login.jsp";
    }
    else{
-      voce1 = "Profilo";
       voce2 = "Logout";
       link2 = "/Nolejava/logoutServlet";
       if (utente.getRuolo().getId()==Costanti.ID_RUOLO_CLIENTE){
+         voce1 = "Profilo";
          link1 += "profilocliente.jsp";   
          operazione = "Noleggia";
 
       } else {
-         link1 += "private/dashboard.jsp";
+    	 voce1 = "Dashboard";
+         link1 = "/Nolejava/notificheDashboard";
       }
    }
 %>
@@ -57,6 +62,7 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta http-equiv="pragma" content="no-cache">
+<link rel="icon" type="image/png" href="/Nolejava/images/favicon.png"/>
 <link rel="stylesheet" href="/Nolejava/fonts/poppins.css">
 <link rel="stylesheet"
 	href="/Nolejava/css/open-iconic-bootstrap.min.css" type="text/css" />
@@ -71,7 +77,7 @@
 <link rel="stylesheet" href="/Nolejava/css/flaticon.css">
 <link rel="stylesheet" href="/Nolejava/css/icomoon.css">
 <link rel="stylesheet" href="/Nolejava/css/style.css" />
-<link rel="stylesheet" href="/Nolejava/css/my-style.css" />
+<link rel="stylesheet" href="/Nolejava/css/my-style.css?v=0.2" />
 </head>
 <body>
 	<!-- INIZIO nav-->
@@ -125,10 +131,10 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12 mt-5">
-					<div class="search-wrap-1 ftco-animate mb-5">
+					<div class="search-wrap-1 ftco-animate">
 						<form action="/Nolejava/homepageServlet" method="post"
 							class="search-property-1">
-							<input type="hidden" value="formcompliato" name="hidden">
+							<input type="hidden" value="formcompliato" name="formcompilato">
 							<div class="row" id="prima-riga-filtri">
 								<div class="col-lg align-items-end">
 									<div class="form-group">
@@ -254,7 +260,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-lg-4 offset-4 align-self-end">
+								<div class="col-8 col-lg-4 offset-2 offset-lg-4 align-self-end">
 									<div class="form-group">
 										<div class="form-field">
 											<input type="submit" value="<%=bottoneNoleggio%>"
@@ -271,23 +277,25 @@
 	</section>
 	<!-- FINE filtro-->
 	<!-- INIZIO le nostre auto-->
-	<section class="ftco-section ftco-no-pb ftco-no-pt">
+	<section id="lista-auto" class="ftco-section ftco-no-pb ftco-no-pt">
 		<div class="container-fluid px-4">
-			<div class="row justify-content-center">
-				<div class="col-md-12 heading-section text-center ftco-animate mb-5">
+			<div class="row justify-content-center mt-5">
+				<div class="col-md-12 heading-section text-center ftco-animate mb-5 mt-5">
 					<span class="subheading">Cosa offriamo</span>
-					<h2 class="mb-2" id="lista-auto">Scegli la tua auto</h2>
+					<h2 class="mb-2"><%=voceListaAuto%></h2>
 				</div>
 			</div>
 			<div class="row">
 			
-				<%List<Auto> automobili =  
-            (ArrayList<Auto>)request.getSession().getAttribute(Costanti.LISTA_COMPLETA_AUTO); 
+<%
         for(Auto a:automobili) { 
         	Integer idAutoCorrente = a.getIdAuto();
         	Double prezzoPerGiornoCorrente = a.getPrezzoPerGiorno();
         	String marcaAutoCorrente = a.getMarca();
         	String modelloAutoCorrente = a.getModello();
+        	String urlAutoCorrente = a.getUrlImg();
+        	String imgUrl = "/Nolejava/images/auto/";
+        	imgUrl += urlAutoCorrente;
         	
 %>
 				<div class="col-md-3">
@@ -296,7 +304,7 @@
 					<input type="hidden" name="idautobtn" value="<%=idAutoCorrente%>">
 						<div class="car-wrap ftco-animate">
 							<div class="img d-flex align-items-end"
-								style="background-image: url(/Nolejava/images/car-1.jpg);">
+								style="background-image: url(<%=imgUrl%>);">
 
 								<div class="price-wrap d-flex">
 									<span class="rate">&#8364; <%=prezzoPerGiornoCorrente%></span>
@@ -330,9 +338,16 @@
 							<div class="block-27">
 								<ul id="pagin">
 									<li><a class="current" href="#lista-auto">1</a></li>
-									<li><a href="#lista-auto">2</a></li>
-									<li><a href="#lista-auto">3</a></li>
-									<li><a href="#lista-auto">4</a></li>
+<% 
+
+									int autoPerPagina = (int) Math.ceil(automobili.size()/4);
+									for (int i=2; i<=autoPerPagina;i++) { 
+%>
+										<li><a href="#lista-auto"><%=i%></a></li>
+<%
+									}
+%>										
+									
 								</ul>
 							</div>
 						</div>
@@ -471,79 +486,7 @@
 		</div>
 	</section>
 	<!-- FINE i nostri servizi-->
-	<!-- INIZIO footer-->
-	<footer class="ftco-footer ftco-bg-dark ftco-section">
-		<div class="container">
-			<div class="row mb-5">
-				<div class="col-md">
-					<div class="ftco-footer-widget mb-4">
-						<h2 class="ftco-heading-2">About NoleJava</h2>
-						<p>NoleJava è il nuovo servizio di noleggio auto offerto dal
-							Comune di Napoli.</p>
-						<ul
-							class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-							<li class="ftco-animate"><a href="#"><span
-									class="icon-twitter"></span></a></li>
-							<li class="ftco-animate"><a href="#"><span
-									class="icon-facebook"></span></a></li>
-							<li class="ftco-animate"><a href="#"><span
-									class="icon-instagram"></span></a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-md">
-					<div class="ftco-footer-widget mb-4 ml-md-5">
-						<h2 class="ftco-heading-2">Informazioni</h2>
-						<ul class="list-unstyled">
-							<li><a href="about.html" class="py-2 d-block">Chi siamo</a></li>
-							<li><a href="where-we-are.html" class="py-2 d-block">Dove
-									siamo</a></li>
-							<li><a href="#" class="py-2 d-block">Term and Conditions</a></li>
-							<li><a href="#" class="py-2 d-block">Privacy &amp;
-									Cookies Policy</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-md">
-					<div class="ftco-footer-widget mb-4">
-						<h2 class="ftco-heading-2">Recapiti</h2>
-						<div class="block-23 mb-3">
-							<ul>
-								<li><span class="icon icon-map-marker"></span><span
-									class="text">Viale F. Ruffo di Calabria 19, 80144 Napoli
-										NA</span></li>
-								<li><a href="/Nolejava/html/contact.html"><span
-										class="icon icon-phone"></span><span class="text">081
-											060 8349</span></a></li>
-								<li><a href="/Nolejava/html/contact.html"><span
-										class="icon icon-envelope"></span><span class="text">info@nolejava.com</span></a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="col-md">
-					<div class="ftco-footer-widget mb-4">
-						<h2 class="ftco-heading-2">Servizio clienti</h2>
-						<ul class="list-unstyled">
-							<li><a href="contact.html" class="py-2 d-block">Contattaci</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12 text-center">
-					<p>
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-						Copyright &copy;
-						<script>document.write(new Date().getFullYear());</script>
-						All rights reserved | NoleJava
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-					</p>
-				</div>
-			</div>
-		</div>
-	</footer>
-	<!-- FINE footer-->
+	<%@ include file="footer.jsp" %>  
 	<!-- loader -->
 	<div id="ftco-loader" class="show fullscreen">
 		<svg class="circular" width="48px" height="48px">
@@ -552,6 +495,9 @@
             <circle class="path" cx="24" cy="24" r="22" fill="none"
 				stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" />
          </svg>
+	</div>
+	<div style="display:none">
+		<a href="/Nolejava/jsp/homepage.jsp#lista-auto" id="listaref"></a>
 	</div>
 	<script src="/Nolejava/js/jquery.min.js"></script>
 	<script src="/Nolejava/js/jquery-migrate-3.0.1.min.js"></script>
@@ -568,7 +514,19 @@
 	<script src="/Nolejava/js/jquery.timepicker.min.js"></script>
 	<script src="/Nolejava/js/scrollax.min.js"></script>
 	<script type="text/javascript" src="/Nolejava/js/datanoleggio.js"></script>
-	
+<% 
+	String formCompilato = request.getParameter("formcompilato");
+	boolean checkForm = formCompilato!=null && !formCompilato.isEmpty();
+	if (checkForm){
+%>
+    <script type="text/javascript" src="/Nolejava/js/specificdiv.js"></script>
+<%
+	}
+%>    
+	<script>
+		var numeroAuto = <%=automobili.size()%>;
+		var numeroPagine = Math.round(numeroAuto/4);
+	</script>
 	<script	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 	<script src="/Nolejava/js/google-map.js"></script>
 	<script src="/Nolejava/js/main.js"></script>
