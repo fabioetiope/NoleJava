@@ -3,6 +3,8 @@ package com.comunenapoli.progetto.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Properties;
  
 import javax.activation.DataHandler;
@@ -136,6 +138,11 @@ public class EmailWithPdfUtility {
 //        document.close();
     	           
          /////////////////
+    	
+    		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    		String dataInizio = df.format(dataInizioNoleggio);
+    		String dataFine = df.format(dataFineNoleggio);
+
          
 			Document document = new Document();
 			PdfWriter.getInstance(document, outputStream);
@@ -147,7 +154,7 @@ public class EmailWithPdfUtility {
 			PdfPTable irdTable = new PdfPTable(2);
 			irdTable.addCell(getIRDCell("Ricevuta No"));
 			irdTable.addCell(getIRDCell("Data Ricevuta"));
-			irdTable.addCell(getIRDCell("XE1234")); // pass invoice number
+			irdTable.addCell(getIRDCell(auto.getTarga() + dataRicevuta.replaceAll("-", ""))); // pass invoice number
 			irdTable.addCell(getIRDCell(dataRicevuta)); // pass invoice date				
 
 			PdfPTable irhTable = new PdfPTable(3);
@@ -303,13 +310,13 @@ public class EmailWithPdfUtility {
 			PdfPTable accounts = new PdfPTable(2);
 			accounts.setWidthPercentage(100);
 			accounts.addCell(getAccountsCell("Totale da pagare"));
-			accounts.addCell(getAccountsCellR(calcolaCostoNoleggio(auto, dataInizioNoleggio, dataFineNoleggio)));
+			accounts.addCell(getAccountsCellR("€" + calcolaCostoNoleggio(auto, dataInizioNoleggio, dataFineNoleggio)));
 			accounts.addCell(getAccountsCell(""));
 			accounts.addCell(getAccountsCellR(""));
 			accounts.addCell(getAccountsCell("Data ritiro"));
-			accounts.addCell(getAccountsCellR(dataInizioNoleggio.toString()));
+			accounts.addCell(getAccountsCellR(dataInizio));
 			accounts.addCell(getAccountsCell("Data riconsegna"));
-			accounts.addCell(getAccountsCellR(dataFineNoleggio.toString()));			
+			accounts.addCell(getAccountsCellR(dataFine));			
 			PdfPCell summaryR = new PdfPCell (accounts);
 			summaryR.setColspan (3);         
 			billTable.addCell(summaryR);  

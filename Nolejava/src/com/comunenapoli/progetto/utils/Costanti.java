@@ -74,6 +74,7 @@ public interface Costanti {
 	public static final String NUMERO_NOLEGGI = "numeroNoleggi";
 	public static final String NUMERO_UTENTI = "numeroUtenti";
 	public static final String NUMERO_AUTO = "numeroAuto";
+	public static final String REGISTRAZIONE_AVVENUTA_EMAIL = "registrazioneAvvenutaEmail";
 	
 	
 

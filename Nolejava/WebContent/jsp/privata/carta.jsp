@@ -125,6 +125,23 @@
     </section>
     <!-- FINE intestazione -->
 
+    <!-- INIZIO success -->
+    <section class="ftco-section contact-section pb-0" id="noleggioavvenuto">
+
+        <div class="row block-9 justify-content-center mb-0 pb-0">
+            <div class="col-md-8 mb-md-5">
+                <div class="bg-light p-5 contact-form justify-content-center text-center">
+                        <h2 class="mt-3">Non ti verrà addebitato nulla al momento della prenotazione.</h2>
+                        <p>Il pagamento va effettuato in sede.</p>
+                </div>    
+
+            </div>
+        </div>    
+    </section>
+    <!-- FINE success -->
+
+
+
 <div class="col-md-8 mx-auto my-5">
 	<div class="row">
 		<div class="col-md-6">
@@ -146,7 +163,7 @@
 									<label>Data di scadenza</label>
 									<div class="input-group">
 										<select class="form-control" id="date-m" name="mesescadenza" required>
-											<option>MM</option>
+   											<option style="display:none">MM</option>
 											<option value="01">01</option>
 											<option value="02">02</option>
 											<option value="03">03</option>
@@ -161,7 +178,7 @@
 											<option value="12">02</option>
 										</select>
 										<select class="form-control" id="date-y" name="annoscadenza" required>
-											<option>YY</option>
+   											<option style="display:none">YY</option>
 											<option value="2020">20</option>
 											<option value="2021">21</option>
 											<option value="2022">22</option>

@@ -68,7 +68,8 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Gestisci auto</title>
+<link rel="icon" type="image/png" href="/Nolejava/images/favicon.png"/>
 
  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -220,6 +221,9 @@
             <input class="form-control" type="text" name="modello" placeholder="Modello">
           </div>
           <div class="col-md-4 col-lg-3 col-xl-3 mt-3">
+            <input class="form-control" type="text" name="targa" placeholder="Targa">
+          </div>          
+          <div class="col-md-4 col-lg-3 col-xl-3 mt-3">
             <input class=" form-control btn btn-primary" name="action" type="submit" value="Ricerca auto disponibili">
           </div>
         </div>
@@ -237,7 +241,7 @@
         <table class="tabella table table-striped table-dark mr-5">
           <thead>
             <tr>
-              <th>idAuto</th>
+              <th>Targa</th>
               <th>Marca</th>
               <th>Modello</th>
               <th>Cilindrata</th>
@@ -256,12 +260,13 @@
 		for (int i=0; i<listaAuto.size();i++){
 			Auto autoCorrente = listaAuto.get(i);
 			Integer idAuto = autoCorrente.getIdAuto();
+			String targaAuto = autoCorrente.getTarga();
 			String marca = autoCorrente.getMarca();
 			String modello = autoCorrente.getModello();
 			Double cilindrata = autoCorrente.getCilindrata();
 %>		
 			<tr>
-				<td><%=idAuto%></td>
+				<td><%=targaAuto%></td>
 				<td><%=marca%></td>
 				<td><%=modello%></td>
 				<td><%=cilindrata%></td>

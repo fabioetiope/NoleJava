@@ -13,8 +13,8 @@ import com.comunenapoli.progetto.utils.Costanti;
 import com.comunenapoli.progetto.utils.EmailUtility;
  
 
-@WebServlet("/emailSendingServlet")
-public class EmailSendingServlet extends HttpServlet {
+@WebServlet("/emailSendingServletCliente")
+public class EmailSendingServletCliente extends HttpServlet {
   
 	private static final long serialVersionUID = 1L;
 	
@@ -35,48 +35,40 @@ public class EmailSendingServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         // reads form fields
-    	String recipient = request.getParameter("recipient");
-    	Boolean isPromosso = (Boolean) request.getAttribute(Costanti.UTENTE_PROMOSSO);
-    	Boolean isRimosso = (Boolean) request.getAttribute(Costanti.UTENTE_RIMOSSO);
-    	Boolean isVerificato = (Boolean) request.getAttribute(Costanti.UTENTE_VERIFICATO);
+    	String recipient = "";
+
+    	
     	Boolean isCancellato = (Boolean) request.getAttribute(Costanti.CANCELLAZIONE_AVVENUTA);
+    	Boolean registrazioneAvvenuta = (Boolean) request.getAttribute(Costanti.REGISTRAZIONE_AVVENUTA_EMAIL);
     	
         String subject = "";
         String content = "";
  
         String resultMessage = "";
-        if (isPromosso!=null && isPromosso) {
-        	subject = "NoleJava - Account promosso";
-        	content = "Sei stato promosso a membro dello staff. Congratulazioni";
-            content += ", ora puoi effetuare il login. www.nolejava.com/login";
-
-        }
-        else if (isRimosso!=null && isRimosso) {
-        	subject = "NoleJava - Account cancellato";
-        	content = "Il tuo account è stato cancellato dai nostri sistemi.";
-        }
-        else if (isVerificato!=null && isVerificato) {
-        	subject = "NoleJava - Account verificato con successo";
-            content = "Il tuo account è stato verificato";
-            content += ", ora puoi effetuare il login. www.nolejava.com/login";
-
-        }
-        else if (isCancellato!=null && isCancellato) {
+        if (isCancellato!=null && isCancellato) {
+        	recipient = request.getParameter("recipient");
         	subject = "NoleJava - Noleggio eliminato con successo";
             content = "Il tuo noleggio è stato cancellato";
+        }
+        
+        if (registrazioneAvvenuta!=null && registrazioneAvvenuta) {
+        	recipient = request.getParameter("email");
+        	subject = "NoleJava - Registrazione avvenuta con successo";
+            content = "Il tuo account è stato registrato con successo. A breve riceverai un' email da parte dello "
+            		+ "staff di NoleJava per confermare la verifica del tuo account.";
         }
         
  
         try {
             EmailUtility.sendEmail(host, port, user, pass, recipient, subject,
                     content);
-            resultMessage = "Email inviata con successo";
+            resultMessage = "Operazione avvenuta con successo, controlla la tua casella postale";
         } catch (Exception ex) {
             ex.printStackTrace();
             resultMessage = "There were an error: " + ex.getMessage();
         } finally {
             request.setAttribute("Message", resultMessage);
-            getServletContext().getRequestDispatcher("/jsp/private/result.jsp").forward(
+            getServletContext().getRequestDispatcher("/jsp/result.jsp").forward(
                     request, response);
         }
     }

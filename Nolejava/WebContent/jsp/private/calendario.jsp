@@ -1,5 +1,3 @@
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.text.DateFormat"%>
 <%@page import="com.comunenapoli.progetto.model.CalendarioChiusure"%>
 <%@page import="java.sql.Date"%>
 <%@page import="com.comunenapoli.progetto.model.Noleggio"%>
@@ -23,6 +21,7 @@ if (utente.getRuolo().getId() == 1){
 
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="icon" type="image/png" href="/Nolejava/images/favicon.png"/>
 
 <link
 	href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
@@ -183,14 +182,11 @@ if (utente.getRuolo().getId() == 1){
 <% 
 	for (int i=0; i<listaChiusure.size();i++){
 		CalendarioChiusure chiusuraCorrente = listaChiusure.get(i);
-		Date dataInizioChiusura = chiusuraCorrente.getDataInizio();
-		Date dataFineChiusura = chiusuraCorrente.getDataFine();
+		Date dataInizio = chiusuraCorrente.getDataInizio();
+		Date dataFine = chiusuraCorrente.getDataFine();
 		
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		String dataInizio = df.format(dataInizioChiusura);
-		String dataFine = df.format(dataFineChiusura);
-
 		Integer idCalendario = chiusuraCorrente.getIdCalendario();
+
 %>		
 		<tr>
 			<td><%=dataInizio%></td>

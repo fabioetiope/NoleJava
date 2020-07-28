@@ -39,13 +39,16 @@ public class EmailSendingServletInvoice extends HttpServlet {
  
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-       
+        // reads form fields
+    	
 		Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
 		Auto auto = (Auto) request.getSession().getAttribute(Costanti.AUTO_IN_SESSION);
 		Date dataInizioNoleggio = (Date) request.getSession().getAttribute(Costanti.DATA_INIZIO_NOLEGGIO);
 		Date dataFineNoleggio = (Date) request.getSession().getAttribute(Costanti.DATA_FINE_NOLEGGIO);
 		
 		String dataRicevuta = new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date());
+
+    	//String recipient = request.getParameter("recipient");
     
     	String recipient = utente.getUsername();
     	String subject = "Ricevuta prenotazione - Nolejava " + "(" + dataRicevuta + ")";
@@ -64,7 +67,33 @@ public class EmailSendingServletInvoice extends HttpServlet {
     			+ "Cordiali saluti,"
     			+ "\n"
     			+ "lo STAFF di NoleJava";
-    			   
+    			
+//      String content = "";
+//        String subject = "";
+//        String content = "";
+// 
+       
+//        if (isPromosso!=null && isPromosso) {
+//        	subject = "NoleJava - Account promosso";
+//        	content = "Sei stato promosso a membro dello staff. Congratulazioni";
+//            content += ", ora puoi effetuare il login. www.nolejava.com/login";
+//
+//        }
+//        else if (isRimosso!=null && isRimosso) {
+//        	subject = "NoleJava - Account cancellato";
+//        	content = "Il tuo account è stato cancellato dai nostri sistemi.";
+//        }
+//        else if (isVerificato!=null && isVerificato) {
+//        	subject = "NoleJava - Account verificato con successo";
+//            content = "Il tuo account è stato verificato";
+//            content += ", ora puoi effetuare il login. www.nolejava.com/login";
+//
+//        }
+//        else if (isCancellato!=null && isCancellato) {
+//        	subject = "NoleJava - Noleggio eliminato con successo";
+//            content = "Il tuo noleggio è stato cancellato";
+//        }
+        
  
         try {
             EmailWithPdfUtility.email(smtpHost, smtpPort, sender, pass, recipient, subject,
@@ -74,7 +103,7 @@ public class EmailSendingServletInvoice extends HttpServlet {
             ex.printStackTrace();
             
         } finally {
-            getServletContext().getRequestDispatcher("/jsp/noleggioeffettuato.jsp").forward(
+            getServletContext().getRequestDispatcher("/jsp/privata/noleggioeffettuato.jsp").forward(
                     request, response);
         }
     }

@@ -1,10 +1,16 @@
-<%@page import="com.comunenapoli.progetto.utils.Costanti"%>
 <%@page import="com.comunenapoli.progetto.model.Utente"%>
 <%@page import="java.sql.Date"%>
+<%@page import="com.comunenapoli.progetto.utils.Costanti"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%
-	Utente utente = (Utente)request.getSession().getAttribute(Costanti.USER_IN_SESSION);
+    pageEncoding="UTF-8"%>
+<% 
+	Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
+	Integer idUtente = utente.getIdUtente();
+	String nome = utente.getNome();
+	String cognome = utente.getCognome();
+	Date dataNascita = utente.getDataNascita();
+	String email = utente.getUsername();
+	String password = utente.getPassword();	
 	String voce1 = "";
 	String voce2 = "";
 	String link = "/Nolejava/jsp/";
@@ -21,48 +27,44 @@
 	    link2 = "/Nolejava/logoutServlet";
 	    if (utente.getRuolo().getId()==Costanti.ID_RUOLO_CLIENTE){
 		   voce1 = "Profilo";
-	       link1 += "profilocliente.jsp";   	
+	       link1 += "privata/profilocliente.jsp";   	
 	    } else {
 	    	 voce1 = "Dashboard";
 	         link1 = "/Nolejava/notificheDashboard";
 	    }
 	 }
-%>  	
+%>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>NoleJava - Noleggio effettuato</title>
-<meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link rel="icon" type="image/png" href="/Nolejava/images/favicon.png"/>
+    <title>NoleJava - Profilo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<link
-	href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
-	rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
+        rel="stylesheet">
+	<link rel="icon" type="image/png" href="/Nolejava/images/favicon.png"/>
 
-<link rel="stylesheet"
-	href="/Nolejava/css/open-iconic-bootstrap.min.css">
-<link rel="stylesheet" href="/Nolejava/css/animate.css">
+    <link rel="stylesheet" href="/Nolejava/ss/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="/Nolejava/css/animate.css">
 
-<link rel="stylesheet" href="/Nolejava/css/owl.carousel.min.css">
-<link rel="stylesheet" href="/Nolejava/css/owl.theme.default.min.css">
-<link rel="stylesheet" href="/Nolejava/css/magnific-popup.css">
+    <link rel="stylesheet" href="/Nolejava/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/Nolejava/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="/Nolejava/css/magnific-popup.css">
 
-<link rel="stylesheet" href="/Nolejava/css/aos.css">
+    <link rel="stylesheet" href="/Nolejava/css/aos.css">
 
-<link rel="stylesheet" href="/Nolejava/css/ionicons.min.css">
+    <link rel="stylesheet" href="/Nolejava/css/ionicons.min.css">
 
-<link rel="stylesheet" href="/Nolejava/css/bootstrap-datepicker.css">
-<link rel="stylesheet" href="/Nolejava/css/jquery.timepicker.css">
+    <link rel="stylesheet" href="/Nolejava/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="/Nolejava/css/jquery.timepicker.css">
 
 
-<link rel="stylesheet" href="/Nolejava/css/flaticon.css">
-<link rel="stylesheet" href="/Nolejava/css/icomoon.css">
-<link rel="stylesheet" href="/Nolejava/css/style.css">
-
+    <link rel="stylesheet" href="/Nolejava/css/flaticon.css">
+    <link rel="stylesheet" href="/Nolejava/css/icomoon.css">
+    <link rel="stylesheet" href="/Nolejava/css/style.css">
 </head>
-
 
 <body>
 
@@ -87,7 +89,7 @@
 					<li class="nav-item"><a href="<%=link%>dovesiamo.jsp"
 						class="nav-link">Dove siamo</a></li>
 					<li class="nav-item"><a href="<%=link%>contact.jsp" class="nav-link">Contattaci</a></li>
-					<li class="nav-item"><a href="<%=link1%>" class="nav-link"><%=voce1%></a></li>
+					<li class="nav-item active"><a href="<%=link1%>" class="nav-link"><%=voce1%></a></li>
 					<li class="nav-item"><a href="<%=link2%>" class="nav-link"><%=voce2%></a></li>
 				</ul>
 			</div>
@@ -103,32 +105,57 @@
             <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
                 <div class="col-md-9 ftco-animate pb-5">
                     <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i
-                                    class="ion-ios-arrow-forward"></i></a></span> <span>Noleggio<i
+                                    class="ion-ios-arrow-forward"></i></a></span> <span>Profilo <i
                                 class="ion-ios-arrow-forward"></i></span></p>
-                    <h1 class="mb-3 bread">Noleggio effettuato</h1>
+                    <h1 class="mb-3 bread">Profilo</h1>
                 </div>
             </div>
         </div>
     </section>
     <!-- FINE intestazione -->
 
-    <!-- INIZIO success -->
-    <section class="ftco-section contact-section" id="noleggioavvenuto">
+    <!-- INIZIO form -->
+    <section class="ftco-section contact-section">
+        <div class="container">
+            <div class="row block-9 justify-content-center mb-5">
+                <div class="col-md-8 mb-md-5">
+                    <h2 class="text-center">Profilo cliente</h2>
+                    <div class="card-deck">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Modifica dati personali</h5>
+                                <form action="/Nolejava/profiloClienteServlet" method="post">
+                                    <input type="submit" class="btn btn-primary" name="action" value="Dati personali">                          
+                                 </form>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Modifica dati carta</h5>
+                                <form action="/Nolejava/profiloClienteServlet" method="post">
+                                    <input type="submit" class="btn btn-primary" name="action" value="Dati carta">     
+                                 </form>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Gestisci prenotazione</h5>
+                                <form action="/Nolejava/profiloClienteServlet" method="post">
+                                     <input type="submit" name="action" class="btn btn-primary" value="Prenotazioni">                           
+                                 </form>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="row block-9 justify-content-center mb-5">
-            <div class="col-md-8 mb-md-5">
-                <div class="bg-light p-5 contact-form justify-content-center text-center">
-                        <span><i class="fa fa-check-circle-o fa-5x text-success"></i></span>
-                        <h2 class="mt-3">Noleggio avvenuto con successo</h2>
-                </div>    
 
+
+                </div>
             </div>
-        </div>    
     </section>
-    <!-- FINE success -->
+    <!-- FINE form -->
 
 
-    	<jsp:include page="footer.jsp"></jsp:include>
+    	<jsp:include page="/jsp/footer.jsp"></jsp:include>
 
 
 
@@ -158,7 +185,6 @@
     <script src="/Nolejava/js/google-map.js"></script>
     <script src="/Nolejava/js/main.js"></script>
     <script src="/Nolejava/js/script.js"></script>
-    <script src="/Nolejava/js/prova.js"></script>
     <script src="https://use.fontawesome.com/b9bdbd120a.js"></script>
     <script src="/Nolejava/js/bootstrap-datetimepicker.min.js"></script>
 

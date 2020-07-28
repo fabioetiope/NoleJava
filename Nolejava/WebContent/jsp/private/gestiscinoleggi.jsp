@@ -21,9 +21,8 @@ if (utente.getRuolo().getId() == 1){
 <head>
 <meta charset="UTF-8">
 <title>Gestisci noleggi</title>
-</head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="icon" type="image/png" href="/Nolejava/images/favicon.png"/>
 
   <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
 
@@ -33,6 +32,7 @@ if (utente.getRuolo().getId() == 1){
 
   <link rel="stylesheet" href="/Nolejava/css/my-style-dashboard.css">
 
+</head>
 
 
 <body>
@@ -163,6 +163,7 @@ if (utente.getRuolo().getId() == 1){
             <datalist id="ricerca" name="ricerca">
               <option value="Username utente"></option>
               <option value="Marca auto"></option>
+              <option value="Targa auto"></option>
             </datalist>
           </div>
           <div class="col-md-3 col-lg-3 col-xl-3 mt-2">
@@ -204,10 +205,11 @@ if (utente.getRuolo().getId() == 1){
         <table class="tabella table table-striped table-dark mr-5">
           <thead>
 			<tr>
-				<th>id Noleggio</th>
+				<th>Prenotazione</th>
 				<th>Data prenotazione</th>		
 				<th>Data inizio noleggio</th>
 				<th>Data fine noleggio</th>	
+				<th>Targa</th>
 				<th>Marca auto</th>	
 				<th>Modello auto</th>	
 				<th>Cliente</th>
@@ -229,19 +231,23 @@ if (utente.getRuolo().getId() == 1){
 		Date dataInizioNoleggio = noleggioCorrente.getDataInizio();
 		Date dataFineNoleggio = noleggioCorrente.getDataFine();
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		String dataInizio = df.format(dataInizioNoleggio);
-		String dataFine = df.format(dataFineNoleggio);
 		String dataPrenotazione = df.format(dataPrenotazioneNoleggio);
+	    String dataInizio = df.format(dataInizioNoleggio);
+	    String dataFine = df.format(dataFineNoleggio);
 		String marca = noleggioCorrente.getAuto().getMarca();
 		String modello = noleggioCorrente.getAuto().getModello();
 		String username = noleggioCorrente.getUtente().getUsername();
+		String targa = noleggioCorrente.getAuto().getTarga();
+        String prenotazione = targa + dataPrenotazione.replaceAll("/", "");
+
 		String operazione = "Cancella noleggio";
 %>
 	<tr>
-				<td><%=idNoleggio%></td>
+				<td><%=prenotazione%></td>
 				<td><%=dataPrenotazione%></td>
 				<td><%=dataInizio%></td>
 				<td><%=dataFine%></td>
+				<td><%=targa%></td>
 				<td><%=marca%></td>
 				<td><%=modello%></td>	
 				<td><%=username%></td>
