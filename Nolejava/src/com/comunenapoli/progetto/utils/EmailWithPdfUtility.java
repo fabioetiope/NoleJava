@@ -11,6 +11,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.Part;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -80,9 +81,12 @@ public class EmailWithPdfUtility {
                          
             //construct the mime multi part
             MimeMultipart mimeMultipart = new MimeMultipart();
+            textBodyPart.setHeader("Content-Type","text/html");
+            textBodyPart.setContent( content, "text/html" );
+            textBodyPart.setHeader("Content-Transfer-Encoding", "quoted-printable");
             mimeMultipart.addBodyPart(textBodyPart);
             mimeMultipart.addBodyPart(pdfBodyPart);
-             
+            
             //create the sender/recipient addresses
             InternetAddress iaSender = new InternetAddress(sender);
             InternetAddress iaRecipient = new InternetAddress(recipient);
@@ -92,6 +96,9 @@ public class EmailWithPdfUtility {
             mimeMessage.setSender(iaSender);
             mimeMessage.setSubject(subject);
             mimeMessage.setRecipient(Message.RecipientType.TO, iaRecipient);
+            mimeMessage.setHeader("Content-Type","text/html");
+            mimeMessage.setContent( content, "text/html" );
+            mimeMessage.setHeader("Content-Transfer-Encoding", "quoted-printable");
             mimeMessage.setContent(mimeMultipart);
              
             //send off the email
@@ -149,7 +156,7 @@ public class EmailWithPdfUtility {
 
 			//Inserting Image in PDF
 			Image image = Image.getInstance ("/Users/fabio/git/NoleJava/Nolejava/WebContent/images/logo-pdf.png");//Header Image
-			image.scaleAbsolute(540f, 72f);//image width,height 
+			image.scaleAbsolute(540f, 102f);//image width,height 
 
 			PdfPTable irdTable = new PdfPTable(2);
 			irdTable.addCell(getIRDCell("Ricevuta No"));

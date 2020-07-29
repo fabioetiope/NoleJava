@@ -34,7 +34,7 @@
 	    link2 = "/Nolejava/logoutServlet";
 	    if (utente.getRuolo().getId()==Costanti.ID_RUOLO_CLIENTE){
 		   voce1 = "Profilo";
-	       link1 += "profilocliente.jsp";   	
+	       link1 += "privata/profilocliente.jsp";   	
 	    } else {
 	    	 voce1 = "Dashboard";
 	         link1 = "/Nolejava/notificheDashboard";
@@ -115,7 +115,7 @@
         <div class="container">
             <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
                 <div class="col-md-9 ftco-animate pb-5">
-                    <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i
+                    <p class="breadcrumbs"><span class="mr-2"><a href="/Nolejava/">Home <i
                   class="ion-ios-arrow-forward"></i></a></span> <span>Carta di credito <i
                 class="ion-ios-arrow-forward"></i></span></p>
                     <h1 class="mb-3 bread">Carta di credito</h1>
@@ -149,7 +149,7 @@
 				<div class="card-header bg-primary text-center text-white">Dati della Carta di Credito</div>
 				<div class="panel-block my-3">
 					<div class="col-md-12">
-                        <form action="/Nolejava/cartaServlet" method="POST">
+                        <form action="/Nolejava/cartaServlet" id="formCarta" method="POST">
 						<div class="form-group">
 							<label>Numero di carta</label>
 							<div class="input-group">
@@ -189,12 +189,12 @@
 								</div>
 								<div class="col-md-4">
 									<label>CVV</label>
-									<input type="text" class="form-control" id="cvc" name="cvv">
+									<input type="text" class="form-control" id="cvc" name="cvv" required>
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
-						<input type="submit" class="form-control btn btn-primary" value="CONFERMA CARTA">
+						<input type="submit" id="conferma" class="form-control btn btn-primary" value="CONFERMA CARTA">
                         </div>
                     </form>    
 					</div>
@@ -304,7 +304,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-
 <script type="text/javascript">
 	var nomeCognomeUtente = "<%=nomeUtente%> <%=cognomeUtente%>";
 </script>
