@@ -4,5 +4,5 @@ A **fully responsive** web-based Car Rental System based on the **Model View Con
 ## Technologies Used
 * **Web server:** Apache Tomcat
 * **Database:** Oracle MySQL
-* **Frontend:** HTML, CSS, JavaScript, Jquery, Bootstrap, Java Server Pages (JSPs)
 * **Backend:** Java Servlets, Hibernate
+* **Frontend:** HTML, CSS, JavaScript, Jquery, Bootstrap, Java Server Pages (JSPs)
