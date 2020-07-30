@@ -6,3 +6,44 @@ A **fully responsive** web-based Car Rental System based on the **Model View Con
 * **Database:** Oracle MySQL
 * **Backend:** Java Servlets, Hibernate
 * **Frontend:** HTML, CSS, JavaScript, Jquery, Bootstrap, Java Server Pages (JSPs)
+
+## Roles
+Following roles are implemented:
+* Admin
+* STAFF
+* Customer
+* Visitor
+
+## Interface
+#### Homepage
+<p align="middle">
+   <img src="../master/screenshots/homepageDesktop.png" width="400"/>
+   <img src="../master/screenshots/homepageFilters.png" width="400"/>
+</p>
+<p align="middle">
+   <img src="../master/screenshots/homepageCars.png" width="400"/>
+   <img src="../master/screenshots/homepageServices.png" width="400"/>
+</p>
+
+#### SignUp and Login
+<p align="middle">
+   <img src="../master/screenshots/signup.png" width="400"/>
+   <img src="../master/screenshots/login.png" width="400"/>
+</p>
+
+#### Car Details and Credit Card
+<p align="middle">
+   <img src="../master/screenshots/carDetails.png" width="400"/>
+   <img src="../master/screenshots/creditCard.png" width="400"/>
+</p>
+
+#### Admin Dashboard
+<p align="middle">
+   <img src="../master/screenshots/adminDashboard.png" width="400"/>
+   <img src="../master/screenshots/adminDashboardManageCars.png" width="400"/>
+</p>
+
+#### PDF Invoice generated with iText Java API
+<p align="middle">
+   <img src="../master/screenshots/PDFinvoice.png" width="400"/>
+</p>
