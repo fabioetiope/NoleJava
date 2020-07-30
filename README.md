@@ -47,3 +47,6 @@ Following roles are implemented:
 <p align="middle">
    <img src="../master/screenshots/PDFinvoice.png" width="400"/>
 </p>
+
+## Contact
+You can get in touch with me on my LinkedIn Profile: [Fabio Etiope](https://www.linkedin.com/in/fabioetiope/)
