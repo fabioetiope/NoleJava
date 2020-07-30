@@ -158,7 +158,7 @@
                             <div class="input-group mb-3">
                                 <input type="password" class="form-control" name="password" aria-label="password"
                                     placeholder="Inserisci una password di almeno 8 caratteri" id="input-pwd"
-                                    pattern=".{8,}" required>
+                                    pattern=".{8,255}" required>
                                 <div class="input-group-append">
                                     <span class="input-group-text toggle-password">
                                         <i class="fa fa-fw fa-eye"></i>
