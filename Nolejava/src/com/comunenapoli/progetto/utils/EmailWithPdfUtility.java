@@ -23,6 +23,7 @@ import javax.mail.util.ByteArrayDataSource;
 
 import com.comunenapoli.progetto.model.Auto;
 import com.comunenapoli.progetto.model.Utente;
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -32,6 +33,7 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BarcodeQRCode;
 import com.itextpdf.text.pdf.FontSelector;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -145,6 +147,8 @@ public class EmailWithPdfUtility {
 //        document.close();
     	           
          /////////////////
+    		String codicePrenotazione = auto.getTarga() + dataRicevuta.replaceAll("-", "");
+    		Image codeQrImage = generateQR(codicePrenotazione);
     	
     		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     		String dataInizio = df.format(dataInizioNoleggio);
@@ -158,26 +162,31 @@ public class EmailWithPdfUtility {
 			Image image = Image.getInstance ("/Users/fabio/git/NoleJava/Nolejava/WebContent/images/logo-pdf.png");//Header Image
 			image.scaleAbsolute(540f, 102f);//image width,height 
 
-			PdfPTable irdTable = new PdfPTable(2);
+			PdfPTable irdTable = new PdfPTable(3);
+			irdTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			irdTable.setWidthPercentage(50);
 			irdTable.addCell(getIRDCell("Ricevuta No"));
 			irdTable.addCell(getIRDCell("Data Ricevuta"));
+			irdTable.addCell(getIRDCell("Codice QR"));
 			irdTable.addCell(getIRDCell(auto.getTarga() + dataRicevuta.replaceAll("-", ""))); // pass invoice number
-			irdTable.addCell(getIRDCell(dataRicevuta)); // pass invoice date				
+			irdTable.addCell(getIRDCell(dataRicevuta)); // pass invoice date
+			irdTable.addCell(getIRDCell(codeQrImage)); // pass invoice date				
 
-			PdfPTable irhTable = new PdfPTable(3);
+
+			PdfPTable irhTable = new PdfPTable(1);
 			irhTable.setWidthPercentage(100);
-
-			irhTable.addCell(getIRHCell("", PdfPCell.ALIGN_RIGHT));
-			irhTable.addCell(getIRHCell("", PdfPCell.ALIGN_RIGHT));
+			//irhTable.addCell(getIRHCell("", PdfPCell.ALIGN_RIGHT));
+			//irhTable.addCell(getIRHCell("", PdfPCell.ALIGN_RIGHT));
 			irhTable.addCell(getIRHCell("Ricevuta", PdfPCell.ALIGN_RIGHT));
-			irhTable.addCell(getIRHCell("", PdfPCell.ALIGN_RIGHT));
-			irhTable.addCell(getIRHCell("", PdfPCell.ALIGN_RIGHT));
-			PdfPCell invoiceTable = new PdfPCell (irdTable);
-			invoiceTable.setBorder(0);
-			irhTable.addCell(invoiceTable);
+			//irhTable.addCell(getIRHCell("", PdfPCell.ALIGN_RIGHT));
+			//irhTable.addCell(getIRHCell("", PdfPCell.ALIGN_RIGHT));
+			
+			//PdfPCell invoiceTable = new PdfPCell (irdTable);
+			//invoiceTable.setBorder(0);
+			//irhTable.addCell(invoiceTable);
 
 			FontSelector fs = new FontSelector();
-			Font font = FontFactory.getFont(FontFactory.TIMES_ROMAN, 13, Font.BOLD);
+			Font font = FontFactory.getFont(FontFactory.HELVETICA, 13, Font.BOLD);
 			fs.addFont(font);
 			Phrase bill = fs.process("Cliente"); // customer information
 			Paragraph name = new Paragraph(utente.getCognome() + " " + utente.getNome());
@@ -188,36 +197,21 @@ public class EmailWithPdfUtility {
 
 			PdfPTable billTable = new PdfPTable(6); //one page contains 15 records 
 			billTable.setWidthPercentage(100);
-			billTable.setWidths(new float[] { 1, 2,5,2,1,2 });
+			billTable.setWidths(new float[] { 1, 2,4,2,2,2 });
 			billTable.setSpacingBefore(30.0f);
 			billTable.addCell(getBillHeaderCell("Index"));
 			billTable.addCell(getBillHeaderCell("Auto"));
 			billTable.addCell(getBillHeaderCell("Descrizione"));
 			billTable.addCell(getBillHeaderCell("Prezzo per giorno"));
-			billTable.addCell(getBillHeaderCell("Qty"));
+			billTable.addCell(getBillHeaderCell("Totale giorni"));
 			billTable.addCell(getBillHeaderCell("Costo noleggio"));
 
 			billTable.addCell(getBillRowCell("1"));
 			billTable.addCell(getBillRowCell(auto.getMarca() + "\n" + auto.getModello()));
 			billTable.addCell(getBillRowCell("colore: " + auto.getColore() + "\n" + "cambio: " + auto.getCambio()));
 			billTable.addCell(getBillRowCell(auto.getPrezzoPerGiorno().toString()));
-			billTable.addCell(getBillRowCell("1"));
+			billTable.addCell(getBillRowCell(calcolaGiorni(dataInizioNoleggio, dataFineNoleggio)));
 			billTable.addCell(getBillRowCell(calcolaCostoNoleggio(auto, dataInizioNoleggio, dataFineNoleggio)));
-
-			billTable.addCell(getBillRowCell(" "));
-			billTable.addCell(getBillRowCell(""));
-			billTable.addCell(getBillRowCell(""));
-			billTable.addCell(getBillRowCell(""));
-			billTable.addCell(getBillRowCell(""));
-			billTable.addCell(getBillRowCell(""));
-
-
-			billTable.addCell(getBillRowCell(" "));
-			billTable.addCell(getBillRowCell(""));
-			billTable.addCell(getBillRowCell(""));
-			billTable.addCell(getBillRowCell(""));
-			billTable.addCell(getBillRowCell(""));
-			billTable.addCell(getBillRowCell(""));
 
 			billTable.addCell(getBillRowCell(" "));
 			billTable.addCell(getBillRowCell(""));
@@ -317,7 +311,7 @@ public class EmailWithPdfUtility {
 			PdfPTable accounts = new PdfPTable(2);
 			accounts.setWidthPercentage(100);
 			accounts.addCell(getAccountsCell("Totale da pagare"));
-			accounts.addCell(getAccountsCellR("€" + calcolaCostoNoleggio(auto, dataInizioNoleggio, dataFineNoleggio)));
+			accounts.addCell(getAccountsCellR("€ " + calcolaCostoNoleggio(auto, dataInizioNoleggio, dataFineNoleggio)));
 			accounts.addCell(getAccountsCell(""));
 			accounts.addCell(getAccountsCellR(""));
 			accounts.addCell(getAccountsCell("Data ritiro"));
@@ -331,8 +325,8 @@ public class EmailWithPdfUtility {
 			PdfPTable describer = new PdfPTable(1);
 			describer.setWidthPercentage(100);
 			describer.addCell(getdescCell(" "));
-			describer.addCell(getdescCell("NoleJava || Viale F. Ruffo di Calabria 19, 80144 Napoli NA || email: nolejava.amministratore@gmail.com || "
-					+ " tel: 081 060 8349"));	
+			describer.addCell(getdescCell("NoleJava © || Sede: Viale F. Ruffo di Calabria 19, 80144 Napoli NA || email: nolejava.amministratore@gmail.com || "
+					+ " Tel: 081 060 8349 || Part. IVA: 08094101212"));	
 
 			document.open();//PDF document opened........	
 
@@ -345,6 +339,7 @@ public class EmailWithPdfUtility {
 			
 			document.add(image);
 			document.add(irhTable);
+			document.add(irdTable);
 			document.add(bill);
 			document.add(name);
 			document.add(contact);
@@ -364,7 +359,7 @@ public class EmailWithPdfUtility {
 	public static PdfPCell getIRHCell(String text, int alignment) {
 		FontSelector fs = new FontSelector();
 		Font font = FontFactory.getFont(FontFactory.HELVETICA, 16);
-		/*	font.setColor(BaseColor.GRAY);*/
+		font.setColor(BaseColor.GRAY);
 		fs.addFont(font);
 		Phrase phrase = fs.process(text);
 		PdfPCell cell = new PdfPCell(phrase);
@@ -376,6 +371,14 @@ public class EmailWithPdfUtility {
 
 	public static PdfPCell getIRDCell(String text) {
 		PdfPCell cell = new PdfPCell (new Paragraph (text));
+		cell.setHorizontalAlignment (Element.ALIGN_CENTER);
+		cell.setPadding (5.0f);
+		cell.setBorderColor(BaseColor.LIGHT_GRAY);
+		return cell;
+	}
+	
+	public static PdfPCell getIRDCell(Image image) {
+		PdfPCell cell = new PdfPCell (image, true);
 		cell.setHorizontalAlignment (Element.ALIGN_CENTER);
 		cell.setPadding (5.0f);
 		cell.setBorderColor(BaseColor.LIGHT_GRAY);
@@ -460,10 +463,28 @@ public class EmailWithPdfUtility {
 		return cell;
 	}
 	
+	public static String calcolaGiorni(Date dataInizioNoleggio, Date dataFineNoleggio) {
+		Integer totGiorni = DataUtils.getDifferenzaGiorni(dataInizioNoleggio, dataFineNoleggio);
+	    return totGiorni.toString();
+	}
+	
 	public static String calcolaCostoNoleggio(Auto auto, Date dataInizioNoleggio, Date dataFineNoleggio) {
 		Integer totGiorni = DataUtils.getDifferenzaGiorni(dataInizioNoleggio, dataFineNoleggio);
 	    Double prezzo = auto.getPrezzoPerGiorno() * totGiorni;
 	    return prezzo.toString();
+	}
+	
+	public static Image generateQR(String codicePrenotazione) {
+        BarcodeQRCode barcodeQRCode = new BarcodeQRCode(codicePrenotazione, 1000, 1000, null);
+        Image codeQrImage = null;
+		try {
+			codeQrImage = barcodeQRCode.getImage();
+		} catch (BadElementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        codeQrImage.scaleAbsolute(100, 100);
+        return codeQrImage;
 	}
      
    
