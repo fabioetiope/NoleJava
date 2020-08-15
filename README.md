@@ -43,6 +43,12 @@ Following roles are implemented:
    <img src="../master/screenshots/adminDashboardManageCars.png" width="400"/>
 </p>
 
+#### Admin Dashboard
+<p align="middle">
+   <img src="../master/screenshots/QRscanner.png" width="400"/>
+   <img src="../master/screenshots/QRscanner.gif" width="400"/>
+</p>
+
 #### PDF Invoice generated with iText Java API
 <p align="middle">
    <img src="../master/screenshots/PDFinvoice-QR.png" width="400"/>
