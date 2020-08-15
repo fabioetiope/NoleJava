@@ -45,7 +45,7 @@ Following roles are implemented:
 
 #### PDF Invoice generated with iText Java API
 <p align="middle">
-   <img src="../master/screenshots/PDFinvoice.png" width="400"/>
+   <img src="../master/screenshots/PDFinvoice-QR.png" width="400"/>
 </p>
 
 ## Contact
