@@ -43,7 +43,7 @@ Following roles are implemented:
    <img src="../master/screenshots/adminDashboardManageCars.png" width="400"/>
 </p>
 
-#### Admin Dashboard
+#### QR Code Scanner
 <p align="middle">
    <img src="../master/screenshots/QRscanner.png" width="400"/>
    <img src="../master/screenshots/QRscanner.gif" width="400"/>
