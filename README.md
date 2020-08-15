@@ -34,7 +34,7 @@ Following roles are implemented:
 #### Car Details and Credit Card
 <p align="middle">
    <img src="../master/screenshots/carDetails.png" width="400"/>
-   <img src="../master/screenshots/creditCard.png" width="400"/>
+   <img src="../master/screenshots/creditCardDemo.gif" width="400"/>
 </p>
 
 #### Admin Dashboard
