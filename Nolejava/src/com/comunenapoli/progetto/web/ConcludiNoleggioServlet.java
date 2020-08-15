@@ -15,6 +15,7 @@ import com.comunenapoli.progetto.businessLogic.BusinessLogicNoleggio;
 import com.comunenapoli.progetto.model.Auto;
 import com.comunenapoli.progetto.model.Noleggio;
 import com.comunenapoli.progetto.model.Utente;
+import com.comunenapoli.progetto.utils.BusinessLogicAutoNoleggioUtils;
 import com.comunenapoli.progetto.utils.Costanti;
 
 
@@ -44,7 +45,11 @@ public class ConcludiNoleggioServlet extends HttpServlet {
 		Calendar currenttime = Calendar.getInstance();
 		Date dataPrenotazione =  new Date((currenttime.getTime()).getTime());
 		
-		Noleggio noleggio = new Noleggio(dataPrenotazione, dataInizioNoleggio,  dataFineNoleggio,  utente,  auto);
+		String numeroPrenotazione = BusinessLogicAutoNoleggioUtils.generateRandomBase64Token(16);
+		request.getSession().setAttribute(Costanti.NUMERO_PRENOTAZIONE, numeroPrenotazione);
+
+		
+		Noleggio noleggio = new Noleggio(numeroPrenotazione, dataPrenotazione, dataInizioNoleggio, dataFineNoleggio, utente, auto);
 		
 		businessLogicNoleggio.setNoleggioByCliente(noleggio);
 		

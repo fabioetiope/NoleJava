@@ -45,6 +45,7 @@ public class EmailSendingServletInvoice extends HttpServlet {
 		Auto auto = (Auto) request.getSession().getAttribute(Costanti.AUTO_IN_SESSION);
 		Date dataInizioNoleggio = (Date) request.getSession().getAttribute(Costanti.DATA_INIZIO_NOLEGGIO);
 		Date dataFineNoleggio = (Date) request.getSession().getAttribute(Costanti.DATA_FINE_NOLEGGIO);
+		String numeroPrenotazione = (String) request.getSession().getAttribute(Costanti.NUMERO_PRENOTAZIONE);
 		
 		String dataRicevuta = new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date());
 
@@ -134,7 +135,7 @@ public class EmailSendingServletInvoice extends HttpServlet {
     			"</html>";	
         try {
             EmailWithPdfUtility.email(smtpHost, smtpPort, sender, pass, recipient, subject,
-                    content, utente, auto, dataInizioNoleggio, dataFineNoleggio, dataRicevuta);
+                    content, utente, auto, dataInizioNoleggio, dataFineNoleggio, dataRicevuta, numeroPrenotazione);
            
         } catch (Exception ex) {
             ex.printStackTrace();

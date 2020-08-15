@@ -46,6 +46,9 @@ public class NotificheDashboard extends HttpServlet {
 		BusinessLogicAuto businessLogicAuto = (BusinessLogicAuto)getServletContext().getAttribute(Costanti.BUSINESS_LOGIC_AUTO);
 		request.setAttribute(Costanti.NUMERO_AUTO, businessLogicAuto.getListaCompletaAuto().size());
 		
+		request.setAttribute(Costanti.NUMERO_PRENOTAZIONI_DA_SCANSIONARE, businessLogicNoleggio.getListaNoleggiDaScansionare().size());
+
+		
 		RequestDispatcher requestDispatcher; 
 		requestDispatcher = request.getRequestDispatcher("/jsp/private/dashboard.jsp");
 		requestDispatcher.forward(request, response);

@@ -75,6 +75,12 @@ public interface Costanti {
 	public static final String NUMERO_UTENTI = "numeroUtenti";
 	public static final String NUMERO_AUTO = "numeroAuto";
 	public static final String REGISTRAZIONE_AVVENUTA_EMAIL = "registrazioneAvvenutaEmail";
+	public static final String NUMERO_PRENOTAZIONI_DA_SCANSIONARE = "numeroPrenotazioniDaScansionare";
+	public static final String NUMERO_PRENOTAZIONE = "numeroPrenotazione";
+	public static final String NOLEGGIO_DA_CONFERMARE = "noleggioDaConfermare";
+	public static final String MESSAGGIO_NOLEGGIO_NON_TROVATO = "messaggioNoleggioNonTrovato";
+	public static final String PATENTE_CLIENTE = "patenteCliente";
+	public static final String MESSAGGIO_NOLEGGIO_CONFERMATO = "messaggioNoleggioConfermato";
 	
 	
 

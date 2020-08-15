@@ -44,7 +44,7 @@ public class EmailWithPdfUtility {
      
     
     public static void email(String smtpHost, String smtpPortString, String sender, String pass, String recipient, String subject,
-            String content, Utente utente, Auto auto, Date dataInizioNoleggio, Date dataFineNoleggio, String dataRicevuta) {
+            String content, Utente utente, Auto auto, Date dataInizioNoleggio, Date dataFineNoleggio, String dataRicevuta, String numeroPrenotazione) {
         
         
     	 // sets SMTP server properties
@@ -72,7 +72,7 @@ public class EmailWithPdfUtility {
              
             //now write the PDF content to the output stream
             outputStream = new ByteArrayOutputStream();
-            writePdf(outputStream, utente, auto, dataInizioNoleggio, dataFineNoleggio, dataRicevuta);
+            writePdf(outputStream, utente, auto, dataInizioNoleggio, dataFineNoleggio, dataRicevuta, numeroPrenotazione);
             byte[] bytes = outputStream.toByteArray();
              
             //construct the pdf body part
@@ -128,7 +128,7 @@ public class EmailWithPdfUtility {
     /**
      * Writes the content of a PDF file (using iText API)
      */
-    public static void writePdf(OutputStream outputStream, Utente utente, Auto auto, Date dataInizioNoleggio, Date dataFineNoleggio, String dataRicevuta) throws Exception {
+    public static void writePdf(OutputStream outputStream, Utente utente, Auto auto, Date dataInizioNoleggio, Date dataFineNoleggio, String dataRicevuta, String numeroPrenotazione) throws Exception {
 //        Document document = new Document();
 //        PdfWriter.getInstance(document, outputStream);
 //         
@@ -147,7 +147,7 @@ public class EmailWithPdfUtility {
 //        document.close();
     	           
          /////////////////
-    		String codicePrenotazione = auto.getTarga() + dataRicevuta.replaceAll("-", "");
+    		String codicePrenotazione = numeroPrenotazione;
     		Image codeQrImage = generateQR(codicePrenotazione);
     	
     		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -168,7 +168,7 @@ public class EmailWithPdfUtility {
 			irdTable.addCell(getIRDCell("Ricevuta No"));
 			irdTable.addCell(getIRDCell("Data Ricevuta"));
 			irdTable.addCell(getIRDCell("Codice QR"));
-			irdTable.addCell(getIRDCell(auto.getTarga() + dataRicevuta.replaceAll("-", ""))); // pass invoice number
+			irdTable.addCell(getIRDCell(codicePrenotazione)); // pass invoice number
 			irdTable.addCell(getIRDCell(dataRicevuta)); // pass invoice date
 			irdTable.addCell(getIRDCell(codeQrImage)); // pass invoice date				
 

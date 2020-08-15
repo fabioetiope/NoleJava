@@ -1,7 +1,9 @@
 package com.comunenapoli.progetto.utils;
 
+import java.security.SecureRandom;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import com.comunenapoli.progetto.businessLogic.AutoDao;
@@ -89,5 +91,12 @@ public class BusinessLogicAutoNoleggioUtils {
 			return autoNoleggioFiltri;
 		}
 		return autoConFiltri;
+	}
+
+	public static String generateRandomBase64Token(int byteLength) {
+	    SecureRandom secureRandom = new SecureRandom();
+	    byte[] token = new byte[byteLength];
+	    secureRandom.nextBytes(token);
+	    return Base64.getUrlEncoder().withoutPadding().encodeToString(token); //base64 encoding
 	}
 }

@@ -213,6 +213,7 @@ if (utente.getRuolo().getId() == 1){
 				<th>Marca auto</th>	
 				<th>Modello auto</th>	
 				<th>Cliente</th>
+				<th>Auto ritirata</th>
 <%
 	if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN) {
 %>					
@@ -238,7 +239,15 @@ if (utente.getRuolo().getId() == 1){
 		String modello = noleggioCorrente.getAuto().getModello();
 		String username = noleggioCorrente.getUtente().getUsername();
 		String targa = noleggioCorrente.getAuto().getTarga();
-        String prenotazione = targa + dataPrenotazione.replaceAll("/", "");
+        String prenotazione = noleggioCorrente.getNumeroPrenotazione();
+        Boolean isScansionato = noleggioCorrente.getIsScansionato();
+ 		String autoRitirata;
+        
+        if (isScansionato == true){
+        	autoRitirata = "Sì";
+        }else {
+        	autoRitirata = "No";
+        }
 
 		String operazione = "Cancella noleggio";
 %>
@@ -251,6 +260,7 @@ if (utente.getRuolo().getId() == 1){
 				<td><%=marca%></td>
 				<td><%=modello%></td>	
 				<td><%=username%></td>
+				<td><%=autoRitirata%></td>
 <%
 		if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN) {
 %>										

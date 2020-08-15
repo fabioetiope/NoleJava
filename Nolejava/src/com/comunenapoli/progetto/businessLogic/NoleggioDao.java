@@ -107,6 +107,18 @@ public class NoleggioDao implements DaoInterface<Noleggio> {
 		List<Noleggio> noleggi = query.setParameter("x",dataInizio).setParameter("y",dataFine).getResultList();
 		return noleggi;
 	}
+
+	public List<Noleggio> findNoleggiDaScansionare() {
+		List<Noleggio> noleggi = manager.createQuery("select n from Noleggio n where n.isScansionato = FALSE",Noleggio.class).
+				getResultList();
+		return noleggi;
+	}
+
+	public Noleggio findNoleggioByNumeroPrenotazione(String numeroPrenotazione) {
+		TypedQuery<Noleggio> query = manager.createQuery("select n from Noleggio n where n.numeroPrenotazione = :x",Noleggio.class);
+		Noleggio noleggio = query.setParameter("x",numeroPrenotazione).getResultList().stream().findFirst().orElse(null);
+		return noleggio;
+	}
 	
 	
 }

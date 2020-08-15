@@ -137,9 +137,9 @@
 
 						<table id="mytable" class="table table-bordred table-striped">
 
-							<thead class="text-center">
+							<thead>
 
-								<th>Prenotazione</th>
+								<th>Numero prenotazione</th>
 								<th>Data prenotazione</th>
 								<th>Data inizio noleggio</th>
 								<th>Data fine noleggio</th>
@@ -164,7 +164,7 @@
         String marca = noleggioCorrente.getAuto().getMarca();
         String modello = noleggioCorrente.getAuto().getModello();
         String targa = noleggioCorrente.getAuto().getTarga();
-        String prenotazione = targa + dataPrenotazione.replaceAll("/", "");
+        String prenotazione = noleggioCorrente.getNumeroPrenotazione();
         System.out.println("prenotazione: " + prenotazione);
         String operazione = "Cancella noleggio";
 %>

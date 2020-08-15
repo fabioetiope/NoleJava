@@ -9,6 +9,7 @@ Integer numeroUtentiNonVerificati = (Integer) request.getAttribute(Costanti.NUME
 Integer numeroNoleggi  = (Integer) request.getAttribute(Costanti.NUMERO_NOLEGGI);
 Integer numeroUtenti  = (Integer) request.getAttribute(Costanti.NUMERO_UTENTI);
 Integer numeroAuto = (Integer) request.getAttribute(Costanti.NUMERO_AUTO);
+Integer prenotazioniDaScansionare = (Integer) request.getAttribute(Costanti.NUMERO_PRENOTAZIONI_DA_SCANSIONARE);
 
 String dashboard = "DASHBOARD ";
 Utente utente = (Utente) request.getSession().getAttribute(Costanti.USER_IN_SESSION);
@@ -136,13 +137,13 @@ if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN){
 			</div>
 		</nav>
 		<!-- FINE NAVBAR -->
-		<%
+	<%
 		Integer ruoloUtente = utente.getRuolo().getId();
 	%>
 		<form action="/Nolejava/dashboardServlet" method="post">
 			<div class="container-fluid ">
 				<div class="row">
-					<% 
+	<% 
 			if (ruoloUtente==Costanti.ID_RUOLO_ADMIN) {
 	%>
 					<div class="col-md-4 col-xl-4">
@@ -159,7 +160,7 @@ if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN){
 							</div>
 							<div style="display: flex; justify-content: center;">
 								<input class="btn btn-primary btn-sm fixed-bottom"
-									style="position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
+									style="min-width: 136px; position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
 									type="submit" name="action" value="Verifica utente">
 							</div>
 						</div>
@@ -179,7 +180,7 @@ if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN){
 							</div>
 							<div style="display: flex; justify-content: center;">
 								<input class="btn btn-primary btn-sm fixed-bottom"
-									style="position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
+									style="min-width: 136px; position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
 									type="submit" name="action" value="Gestisci noleggi">
 							</div>
 						</div>
@@ -204,13 +205,13 @@ if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN){
 							</div>
 							<div style="display: flex; text-align: center;">
 								<input class="btn btn-primary btn-sm fixed-bottom"
-									style="position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
+									style="min-width: 136px; position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
 									type="submit" name="action" value="Calendario ferie">
 							</div>
 						</div>
 					</div>
 
-					<% 
+	<% 
 			}
 	%>
 					<div class="col-md-4 col-xl-4 col-xl-offset-2 col-md-offset-2 mt-5">
@@ -227,7 +228,7 @@ if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN){
 							</div>
 							<div style="display: flex; justify-content: center;">
 								<input class="btn btn-primary btn-sm fixed-bottom"
-									style="position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
+									style="min-width: 136px; position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
 									type="submit" name="action" value="Gestisci utenti">
 							</div>
 						</div>
@@ -247,8 +248,28 @@ if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN){
 							</div>
 							<div style="display: flex; justify-content: center;">
 								<input class="btn btn-primary btn-sm fixed-bottom"
-									style="position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
+									style="min-width: 136px; position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
 									type="submit" name="action" value="Gestisci auto">
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-md-4 col-xl-4 col-xl-offset-2 col-md-offset-2 mt-5 mb-5 mb-md-5 mb-xl-0">
+						<div class="card order-card"
+							style="background-color: rgb(36, 37, 38); height: 300px;">
+							<div class="notifica card bg-c-yellow order-card fixed-top"
+								style="position: absolute; margin: 7%;">
+								<div class="card-block">
+									<h6 class="m-b-20">Prenotazioni da scansionare</h6>
+									<h3 class="text-right " style="color: white;">
+										<i class="fas fa-qrcode f-left"></i><span><%=prenotazioniDaScansionare%></span>
+									</h3>
+								</div>
+							</div>
+							<div style="display: flex; justify-content: center;">
+								<input class="btn btn-primary btn-sm fixed-bottom"
+									style="min-width: 136px; position: absolute; margin-bottom: 10%; margin-right: auto; margin-left: auto; border-radius: 9px;"
+									type="submit" name="action" value="Scansiona">
 							</div>
 						</div>
 					</div>

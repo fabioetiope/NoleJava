@@ -315,4 +315,18 @@ public class BusinessLogicNoleggio {
 	
 	}
 
+	public List<Noleggio> getListaNoleggiDaScansionare() {
+		return noleggioDao.findNoleggiDaScansionare();
+	}
+
+	public Noleggio getNoleggioByNumeroPrenotazione(String numeroPrenotazione) {
+		Noleggio noleggio = noleggioDao.findNoleggioByNumeroPrenotazione(numeroPrenotazione);
+		return noleggio;
+	}
+
+	public void confermaNoleggio(Noleggio noleggio) {
+		noleggio.setIsScansionato(true);
+		update(noleggio);	
+	}
+
 }

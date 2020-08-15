@@ -16,10 +16,12 @@ public class Noleggio {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idNoleggio = null;
 	
+	private String numeroPrenotazione = null;
 	private Date dataPrenotazione = null;	
 	private Date dataInizio = null;
 	private Date dataFine = null;
 	private Boolean isDisponibile = true;
+	private Boolean isScansionato = false;
 	
 	@ManyToOne
 	private Utente utente = null;
@@ -27,14 +29,15 @@ public class Noleggio {
 	@OneToOne
 	private Auto auto = null;
 	
+	
 	public Noleggio() {
-		this(null,null,null,null,null);
+		this(null,null,null,null,null,null);
 	}
 	
 
-	public Noleggio(Date dataPrenotazione, Date dataInizio, Date dataFine, Utente utente,
+	public Noleggio(String numeroPrenotazione, Date dataPrenotazione, Date dataInizio, Date dataFine, Utente utente,
 			Auto auto) {
-		super();
+		this.numeroPrenotazione = numeroPrenotazione;
 		this.dataPrenotazione = dataPrenotazione;
 		this.dataInizio = dataInizio;
 		this.dataFine = dataFine;
@@ -48,6 +51,15 @@ public class Noleggio {
 
 	public void setIdNoleggio(Integer idNoleggio) {
 		this.idNoleggio = idNoleggio;
+	}
+
+	public String getNumeroPrenotazione() {
+		return numeroPrenotazione;
+	}
+
+
+	public void setNumeroPrenotazione(String numeroPrenotazione) {
+		this.numeroPrenotazione = numeroPrenotazione;
 	}
 
 	public Date getDataPrenotazione() {
@@ -97,6 +109,14 @@ public class Noleggio {
 	public void setIsDisponibile(Boolean isDisponibile) {
 		this.isDisponibile = isDisponibile;
 	}
+	
+	public Boolean getIsScansionato() {
+		return isScansionato;
+	}
+
+	public void setIsScansionato(Boolean isScansionato) {
+		this.isScansionato = isScansionato;
+	}
 
 
 	@Override
@@ -109,6 +129,8 @@ public class Noleggio {
 		result = prime * result + ((dataPrenotazione == null) ? 0 : dataPrenotazione.hashCode());
 		result = prime * result + ((idNoleggio == null) ? 0 : idNoleggio.hashCode());
 		result = prime * result + ((isDisponibile == null) ? 0 : isDisponibile.hashCode());
+		result = prime * result + ((isScansionato == null) ? 0 : isScansionato.hashCode());
+		result = prime * result + ((numeroPrenotazione == null) ? 0 : numeroPrenotazione.hashCode());
 		result = prime * result + ((utente == null) ? 0 : utente.hashCode());
 		return result;
 	}
@@ -153,6 +175,16 @@ public class Noleggio {
 				return false;
 		} else if (!isDisponibile.equals(other.isDisponibile))
 			return false;
+		if (isScansionato == null) {
+			if (other.isScansionato != null)
+				return false;
+		} else if (!isScansionato.equals(other.isScansionato))
+			return false;
+		if (numeroPrenotazione == null) {
+			if (other.numeroPrenotazione != null)
+				return false;
+		} else if (!numeroPrenotazione.equals(other.numeroPrenotazione))
+			return false;
 		if (utente == null) {
 			if (other.utente != null)
 				return false;
@@ -161,6 +193,14 @@ public class Noleggio {
 		return true;
 	}
 
+
+	@Override
+	public String toString() {
+		return "Noleggio [idNoleggio=" + idNoleggio + ", numeroPrenotazione=" + numeroPrenotazione
+				+ ", dataPrenotazione=" + dataPrenotazione + ", dataInizio=" + dataInizio + ", dataFine=" + dataFine
+				+ ", isDisponibile=" + isDisponibile + ", isScansionato=" + isScansionato + ", utente=" + utente
+				+ ", auto=" + auto + "]";
+	}
 	
 
 }
