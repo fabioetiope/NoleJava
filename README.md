@@ -39,7 +39,7 @@ Following roles are implemented:
 
 #### Admin Dashboard
 <p align="middle">
-   <img src="../master/screenshots/adminDashboard.png" width="400"/>
+   <img src="../master/screenshots/dashboard.png" width="400"/>
    <img src="../master/screenshots/adminDashboardManageCars.png" width="400"/>
 </p>
 
