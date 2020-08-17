@@ -191,18 +191,18 @@ if (utente.getRuolo().getId() == Costanti.ID_RUOLO_ADMIN){
 
 				if (idRuoloUtente==Costanti.ID_RUOLO_CLIENTE && isVerificato) {
 %>
-			     	<input type="submit" name="action" value="Promuovi utente">
+			     	<input style="min-width: 132px" type="submit" name="action" value="Promuovi utente">
 <% 
 				}
 				else if (idRuoloUtente!=Costanti.ID_RUOLO_ADMIN && !isVerificato && ruoloUtente==Costanti.ID_RUOLO_ADMIN) {
 %>
-				    <input type="submit" name="action" value="Verifica utente">
+				    <input style="min-width: 132px" type="submit" name="action" value="Verifica utente">
 	
 <% 
 				}
 				if (ruoloUtente==Costanti.ID_RUOLO_ADMIN && idRuoloUtente!=Costanti.ID_RUOLO_ADMIN){	
 %>			     	
-    				<input type="submit" name="action" value="Elimina utente">   
+    				<input style="min-width: 132px" type="submit" name="action" value="Elimina utente">   
 <% 
 			}
 %>				
